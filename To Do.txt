@@ -1,0 +1,70 @@
+Writing the world cup part 2:
+
+-Each player's ID is a key for an array, each cell in the array points to the player in its team's upside down tree
+-AVL Tree of all teams, where each team holds a pointer to the root of its tree of players
+-AVL MultiTree of teams organized by total player ability and with an index field for each team
+-Tree of players for each team, where the root of the tree points to the node of the team in tree of all teams
+
+-Internal field for players: player Ability
+-Internal field for teams: total player ability
+-Internal field for teams: team spirit
+
+-Num Games Played:
+	Each player is saved with the internal field of num games played calculated this way: given num games - team num games - num games of root before it
+	When uniting teams, update the root of the players tree of the team being added in, along with the root of the players tree of the buying team
+	
+
+
+Lior:
+-add_player()
+	Update AVL Multitree of teams organized by total player ability by removing and re-adding the team
+	Update team spirit
+	Save partial team spirit as a field in each player (equal to the total team spirit after addition of new player + rootSpirit.inv())
+-num_played_games_for_player(): use union find strategy
+	Each player is saved with the internal field of num games played calculated this way: given num games - team num games - num games of root before it
+	Go up the tree to the root, adding the num games, and then add the team's num games - return the value that is received	
+-add_player_cards()
+	In add cards, go up the tree to the root in order to make sure that the given player is still active in the game
+	If the player is still active, add the cards and if not return FAILURE
+-get_player_cards()
+	Return the cards the player has by using the array of pointers to its location in the tree
+-get_partial_spirit()
+	Go up the tree to make sure that the team the player plays for is still active in the tournament
+	Along the way, add each player's spirit to the a total sum: using spirit *= parent.spirit until get to root
+	If active, return that player's field of partial team spirit (spirit)
+	If inactive, return FAILURE
+-upside down tree class
+	only the root has a field that points to the team 
+	union
+	find - fix the problem with reorganizing the tree as shown in Ido's tirgul
+	generic node
+-Update Player Class
+
+
+
+Sarah:
+-add_team()
+	Update AVL Multitree
+-remove_team()
+	Update AVL Multitree
+	Use the function knockout team ID to make the root of the players team ID negative if the team it plays for was kicked out of the tournament
+-play_match()
+-get_team_points()
+-get_ith_pointless_ability(): organize the teams in a tree while holding their index number like in the lecture, according to  total player ability
+	Use the AVL MultiTree and index saving
+-buy_team()
+	Unite the teams in the teams tree
+	According to union find
+	For the original root of the players that are being bought, update the root num games played:
+		num games = num games root + original team num games - root of buying team - num games played of buying team
+	
+	Update AVL Multitree - remove bought team, remove and re-add the buying team
+	Update team spirit
+	Update partial team spirit for each player:
+		When the bought team is smaller than the buying team: rootB = totalSpiritABeforeUnite - rootA + spiritRootBBeforeUnite
+		When the bought team is larger than the buying team: 
+			rootB = totalABeforeUnite + spiritBBeforeUnite
+			rootA = spiritABeforeUnite - spiritRootBAfterUnite
+		
+-AVL Multitree with index
+-Update Team class
