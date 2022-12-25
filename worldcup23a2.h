@@ -16,13 +16,71 @@
 #define WORLDCUP23A2_H_
 
 #include "wet2util.h"
+#include "Player.h"
+#include "Teams.h"
+#include "AVLTree.h"
+#include "GenericNode.h"
+#include <memory.h>
 
 class world_cup_t {
 private:
-	//
-	// Here you may add anything you want
-	//
-	
+    //Total number of players in world cup (including inactive players)
+    int m_numTotalPlayers;
+    //Current hash index, used to calculate the hash table size
+    int m_currentHashIndex;
+    //Hash table of AVL trees of players
+    Tree<GenericNode<Player*>, Player*>** m_playersHashTable;
+    //Tree of shared pointers of the type team, with all the teams in the game sorted by their ID
+    Tree<GenericNode<Team*>, Team*> m_teamsByID;
+    //Tree of shared pointers of the type team, with all the teams in the game.
+    //It is sorted by their overall players' ability + points, then the team's spiritual "power", and then the teams' ID
+    MultiTree<Team*> m_teamsByAbility;
+
+    //-------------------------------------------Helper Functions----------------------------------------------
+
+    /*
+    * Check if player exists in hash table (inactive or active)
+    * @return - true if player already exists, else return false
+    */
+    bool check_player_exists(int playerId);
+
+    /*
+    * Check if player exists in hash table (inactive or active)
+    * @return - true if player already exists, else return false
+    */
+    bool check_player_kicked_out(int playerId);
+
+    /*
+    * Calculate size of hash table according to index
+    * @return - integer that is equal to 2^index - 1
+    */
+    int calculate_hash_size(int index);
+
+    /*
+    * When the number of players = size of table, the table needs to be enlarged to ensure time complexity of O(1)
+    *   for inserting + searching for players
+    * @return - none
+    */
+    void enlarge_hash_table();
+
+    /*
+    * Deallocate memory of previous hash table
+    * @return - none
+    */
+    void destroy_old_hash_table(Tree<GenericNode<Player*>, Player*>** tmpTable);
+
+    /*
+    * Insert new player to hash table
+    * @return - none
+    */
+    void insert_player_hash_table(Player* tmpPlayer);
+
+    /*
+    * Calculate placement of player in hash table according to the hash function
+    * @return - integer that is equal to the player's index in the hash table
+    */
+    int hash_function(int id);
+
 public:
 	// <DO-NOT-MODIFY> {
 	
