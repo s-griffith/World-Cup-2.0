@@ -2,7 +2,6 @@
 #define WORLD_CUP_SYSTEM_EXCEPTION_H
 
 #include <exception>
-#include <iostream>
 
 /*
 * Class NodeNotFound : std::exception

@@ -1,8 +1,6 @@
 #ifndef AVLTREE_h
 #define AVLTREE_h
 
-#include <iostream>
-#include <string>
 #include <new>
 #include <memory>
 #include "Exception.h"
