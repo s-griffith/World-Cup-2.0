@@ -111,6 +111,39 @@ public:
     */
     void update_team(Team* tmpTeam);
 
+    /*
+    * Compress the path between the player and the root.
+    * @return - none.
+    */
+    void find();
+
+    /*
+    * While compressing the path from the player to root in find, the number of games played are updated.
+    *       The games of the players between the current player and the root will be added to the current player.
+    * @return - none
+    */
+    int find_update_games(Player* tmpPlayer);
+
+    /*
+    * While compressing the path from the player to root in find, the partial spirits are updated.
+    *       The games of the players between the current player and the root will be added to the current player.
+    * @return - none
+    */
+    permutation_t find_update_partial_spirit(Player* tmpPlayer);
+
+    /*
+    * Compress the path from the player to the root of the upside down tree.
+    * @return - pointer to the root player of the upside-down tree.
+    */
+    Player* find_update_parents(Player* tmpPlayer);
+
+    /*
+    * Unite between the two team players.
+    * @return - root of new player upside down tree.
+    */
+    Player* players_union(Player* otherTeam, int currentNumPlayers, int otherNumPlayers, \
+            permutation_t current_team_spirit, permutation_t other_team_spirit);
+
 private:
 
 

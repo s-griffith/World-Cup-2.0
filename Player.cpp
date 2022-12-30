@@ -96,3 +96,79 @@ void Player::update_team(Team* tmpTeam)
     m_team = tmpTeam;
 }
 
+//---------------------------------------Union Find---------------------------------------------
+
+void Player::find()
+{
+    if (m_parent == nullptr || m_parent->m_parent == nullptr)
+        return;
+    find_update_games(this);
+    find_update_partial_spirit(this);
+    find_update_parents(this);
+}
+
+int Player::find_update_games(Player* tmpPlayer)
+{
+    if (tmpPlayer->m_parent == nullptr) {
+        return 0;
+    }
+    tmpPlayer->m_gamesPlayed += find_update_games(tmpPlayer->m_parent);
+    return tmpPlayer->m_gamesPlayed;
+}
+
+permutation_t Player::find_update_partial_spirit(Player* tmpPlayer)
+{
+    if (tmpPlayer->m_parent == nullptr || tmpPlayer->m_parent->m_parent == nullptr) {
+        return tmpPlayer->m_partialSpirit;
+    }
+    tmpPlayer->m_partialSpirit = find_update_partial_spirit(tmpPlayer->m_parent) * tmpPlayer->m_partialSpirit;
+    return tmpPlayer->m_partialSpirit;
+}
+
+Player* Player::find_update_parents(Player* tmpPlayer)
+{
+    if (tmpPlayer->m_parent == nullptr) {
+        return this;
+    }
+    tmpPlayer->m_parent = find_update_parents(tmpPlayer->m_parent);
+    return tmpPlayer->m_parent;
+}
+
+Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int otherNumPlayers, \
+            permutation_t currentTeamSpirit, permutation_t otherTeamSpirit)
+{
+    //***Assumptions from buy_teams: **********************************************************************************
+    //rootPlayer1 games played += team1 games played
+    //rootPlayer2 games played += team2 games played
+    //newTeam games played = 0
+    //newTeam num players = team1 num players + team2 num players
+    //return player from this function is the new root - it's team pointer should be the new team
+    //return player from this function is the new root - the new team should point to it
+    //This function should only be called if team1 and team2 have at least one player each, otherwise play around with root according to who is empty
+
+    //Nothing to unite!
+    if (currentNumPlayers == 0 || otherNumPlayers == 0) {
+        return nullptr;
+    }
+    //Other team is smaller - they will be joining the current team's upside down tree
+    if (currentNumPlayers >= otherNumPlayers) {
+        //Change root of other team to current team's root
+        otherTeam->m_parent = this;
+        //Update partial spirit for team
+        otherTeam->m_partialSpirit = currentTeamSpirit * m_partialSpirit;
+        otherTeam->m_partialSpirit = m_parent->m_partialSpirit->inv() * otherTeam->m_partialSpirit;
+        //Update games played of other team
+        otherTeam->m_gamesPlayed -= m_gamesPlayed;
+        //Return root of new player upside-down tree
+        return this;
+    }
+    //Change root of current team to other team's root
+    m_parent = otherTeam;
+    //Update partial spirit for team
+    otherTeam->m_partialSpirit = currentTeamSpirit * m_partialSpirit;
+    m_partialSpirit = m_parent->m_partialSpirit->inv() * m_partialSpirit;
+    //Update games played of current team
+    m_gamesPlayed -= m_parent->m_gamesPlayed;
+    //Return root of new player upside-down tree
+    return otherTeam;
+}
