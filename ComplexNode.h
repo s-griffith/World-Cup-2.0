@@ -3,6 +3,7 @@
 
 #include "Node.h"
 #include "Player.h"
+#include <iostream>
 
 /*
 * Class Complex Node : Node
@@ -112,8 +113,8 @@ private:
     ComplexNode<T>* m_parent;
     ComplexNode<T>* m_left;
     ComplexNode<T>* m_right;
-    int m_goals;
-    int m_cards;
+    int m_ability;
+    int m_index;
 
     /*
      * The following classes are friend classes in order to allow full access to private fields and functions of
@@ -128,6 +129,16 @@ private:
 
     template <class ComplexNode, class N>
     friend class Tree;
+
+    /*
+     * Helper functions for testing:
+     * Prints a tree, node by node
+     * @param - none
+     * @return - void
+     */
+    void inorderWalkNode(bool flag);
+    void printNode();
+    void printData();
     
 };
 
@@ -140,8 +151,8 @@ ComplexNode<T>::ComplexNode() :
         m_parent(nullptr),
         m_left(nullptr),
         m_right(nullptr),
-        m_goals(0),
-        m_cards(0)
+        m_ability(0),
+        m_index(0)
 {}
 
 
@@ -151,8 +162,8 @@ ComplexNode<T>::ComplexNode(T data) :
         m_parent(nullptr),
         m_left(nullptr),
         m_right(nullptr),
-        m_goals(data->get_goals()),
-        m_cards(data->get_cards())
+        m_ability(data->get_ability()),
+        m_index(0)
 {}
 
 
@@ -298,6 +309,51 @@ int ComplexNode<T>::get_data_inorder(int* const array, int index) const
     return index;
 }
 
+template <class T>
+void ComplexNode<T>::printNode() {
+    int parent, left, right;
+    if (m_parent == nullptr) {
+        parent = -1;
+    }
+    else {
+        parent = m_parent->m_id;
+    }
+    if (m_left == nullptr) {
+        left = -1;
+    }
+    else {
+        left = m_left->m_id;
+    }
+    if (m_right == nullptr) {
+        right = -1;
+    }
+    else {
+        right = m_right->m_id;
+    }
+    std::cout << "ID = " << this->m_id << ", Ability = " << this->m_ability << ", Parent = " << parent << ", Left = " 
+            << left << ", Right = " << right << std::endl;
+}
+
+
+template <class T>
+void ComplexNode<T>::printData() {
+    std::cout << "ID = " << Node<T>::m_id << std::endl;
+}
+
+
+template <class T>
+void ComplexNode<T>::inorderWalkNode(bool flag) {
+    if (this != nullptr) {
+        m_left->inorderWalkNode(flag);
+        if (flag) {
+            this->printNode();
+        }
+        else {
+            this->printData();
+        }
+        m_right->inorderWalkNode(flag);
+    }
+}
 
 //-----------------------------------------------------------------------------------------------------------
 

@@ -5,6 +5,7 @@
 #include "Node.h"
 #include "ComplexNode.h"
 #include "Exception.h"
+#include <iostream>
 
 /*
 * Class MultiTree : Tree
@@ -42,14 +43,14 @@ public:
      * @param - New data to insert and the ID, goals, and cards of the new node
      * @return - void
      */
-    void insert(T data, const int id, const int goals, const int cards);
+    void insert(T data, const int id, const int ability);
 
     /*
      * Remove node according to the id, goals, and cards given
      * @param - The ID, goals, and cards of the node that needs to be removed
      * @return - void
      */
-    void remove(const int id, const int goals, const int cards);
+    void remove(const int id, const int ability);
 
     /*
      * Search for max node by going down the right side of the tree
@@ -63,21 +64,21 @@ public:
      * @param - The ID, goals, and cards of the requested node
      * @return - the data of the node
      */
-    T& search_and_return_data(const int id, const int goals, const int cards);
+    T& search_and_return_data(const int id, const int ability);
 
     /*
      * Search for node with a specific id, according to the id, goals, and cards given
      * @param - The ID, goals, and cards of the requested node
      * @return - the requested node
      */
-    ComplexNode<T>& search_specific_id(const int id, const int goals, const int cards);
+    ComplexNode<T>& search_specific_id(const int id, const int ability);
 
     /*
      * Recursively search the tree, according to the id, goals, and cards given, starting with the root
      * @param - The ID, goals, and cards of the requested node, and the root of its tree
      * @return - the requested node
      */
-    ComplexNode<T>& search_recursively(const int id, const int goals, const int cards, ComplexNode<T>* currentNode);
+    ComplexNode<T>& search_recursively(const int id, const int ability, ComplexNode<T>* currentNode);
 
     /*
      * Helper function for get_all_players in world_cup:
@@ -102,6 +103,14 @@ public:
      * @return - void
      */
     void insertInorder(T* data, const int end);
+
+    /*
+     * Helper function for testing:
+     * Prints the tree, node by node
+     * @param - none
+     * @return - void
+     */
+    void print_tree();
 
 private:
 
@@ -135,14 +144,14 @@ MultiTree<T>::MultiTree() :
 //----------------------------------Insert and Remove---------------------------------
 
 template<class T>
-void MultiTree<T>::insert(T data, const int id, const int goals, const int cards) {
+void MultiTree<T>::insert(T data, const int id, const int ability) {
     //If this is the first node in the tree:
     if (this->m_node->m_height == -1) {
         this->m_node->m_data = data;
+        this->m_node->m_ability = ability;
         this->m_node->m_id = id;
+        this->m_node->m_index++;
         this->m_node->m_height++;
-        this->m_node->m_goals = goals;
-        this->m_node->m_cards = cards;
         return;
     }
     //Find the proper location of the new node (when it's not the first):
@@ -154,21 +163,12 @@ void MultiTree<T>::insert(T data, const int id, const int goals, const int cards
             //A node with that id already exists - invalid operation
             throw InvalidID(); 
         }
-        //maybe make this into a switch case
-        if (goals < x->m_goals) {
+        if (ability < x->m_ability) {
             x = x->m_left;
         }
-        else if (goals == x->m_goals) {
-            if (cards > x->m_cards) {
+        else if (ability == x->m_ability) {
+            if (id < x->m_id) {
                 x = x->m_left;
-            }
-            else if (cards == x->m_cards) {
-                if (id < x->m_id) {
-                    x = x->m_left;
-                }
-                else {
-                    x = x->m_right;
-                }
             }
             else {
                 x = x->m_right;
@@ -192,24 +192,16 @@ void MultiTree<T>::insert(T data, const int id, const int goals, const int cards
     node->m_left = nullptr;
     node->m_right = nullptr;
     node->m_data = data;
-    node->m_goals = goals;
-    node->m_cards = cards;
+    node->m_ability = ability;
     node->m_id = id;
     node->m_height = 0;
-    if (node->m_goals < parent->m_goals) {
+    node->m_index = 0;
+    if (node->m_ability < parent->m_ability) {
         parent->m_left = node;
     }
-    else if (node->m_goals == parent->m_goals) {
-        if (node->m_cards > parent->m_cards) {
+    else if (node->m_ability == parent->m_ability) {
+        if (node->m_id < parent->m_id) {
             parent->m_left = node;
-        }
-        else if (node->m_cards == parent->m_cards) {
-            if (node->m_id < parent->m_id) {
-                parent->m_left = node;
-            }
-            else {
-                parent->m_right = node;
-            }
         }
         else {
             parent->m_right = node;
@@ -223,18 +215,18 @@ void MultiTree<T>::insert(T data, const int id, const int goals, const int cards
 
 
 template<class T>
-void MultiTree<T>::remove(const int id, const int goals, const int cards) {
+void MultiTree<T>::remove(const int id, const int ability) {
     if (this->m_node->m_id == id && this->m_node->m_right == nullptr && this->m_node->m_left == nullptr 
                                                                                 && this->m_node->m_parent == nullptr) {
         this->m_node->m_data = nullptr;
         this->m_node->m_height = -1;
         this->m_node->m_bf = 0;
         this->m_node->m_id = 0;
-        this->m_node->m_goals = 0;
-        this->m_node->m_cards = 0;
+        this->m_node->m_ability = 0;
+        this->m_node->m_index = 0;
         return;
     }
-    ComplexNode<T>* toRemove = &(search_specific_id(id, goals, cards));
+    ComplexNode<T>* toRemove = &(search_specific_id(id, ability));
     ComplexNode<T>* nodeToFix = Tree<ComplexNode<T>, T>::make_node_leaf(toRemove);
     delete toRemove;
     //Go up the tree and check the balance factors and complete needed rotations
@@ -255,36 +247,32 @@ T& MultiTree<T>::search_and_return_max() {
 
 
 template<class T>
-T& MultiTree<T>::search_and_return_data(const int id, const int goals, const int cards) {
-    return search_recursively(id, goals, cards, this->m_node).m_data;
+T& MultiTree<T>::search_and_return_data(const int id, const int ability) {
+    return search_recursively(id, ability, this->m_node).m_data;
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int goals, const int cards) {
-    return search_recursively(id, goals, cards, this->m_node);
+ComplexNode<T>& MultiTree<T>::search_specific_id(const int id, const int ability) {
+    return search_recursively(id, ability, this->m_node);
 }
 
 
 template<class T>
-ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int goals, const int cards,
-             ComplexNode<T>* currentNode) {
+ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int ability, ComplexNode<T>* currentNode) {
     if (currentNode == nullptr) {
         throw NodeNotFound();
     }
     if (currentNode->m_id == id) {
         return *currentNode;
     }
-    if (currentNode->m_goals < goals) {
-        return search_recursively(id, goals, cards, currentNode->m_right);
+    if (currentNode->m_ability < ability) {
+        return search_recursively(id, ability, currentNode->m_right);
     }
-    if (currentNode->m_cards > cards && currentNode->m_goals == goals) {
-        return search_recursively(id, goals, cards, currentNode->m_right);
+    if (currentNode->m_id < id && currentNode->m_ability == ability) {
+        return search_recursively(id, ability, currentNode->m_right);
     }
-    if (currentNode->m_id < id && currentNode->m_goals == goals && currentNode->m_cards == cards) {
-        return search_recursively(id, goals, cards, currentNode->m_right);
-    }
-    return search_recursively(id, goals, cards, currentNode->m_left);
+    return search_recursively(id, ability, currentNode->m_left);
 }
 
 
@@ -413,6 +401,11 @@ ComplexNode<T>* MultiTree<T>::insertInorderRecursive(T* data, const int start, c
     root->update_bf();
     root->update_height();
     return root;
+}
+
+template<class T>
+void MultiTree<T>::print_tree() {
+    this->m_node->inorderWalkNode(1);
 }
 
 //----------------------------------------------------------------------------------------------

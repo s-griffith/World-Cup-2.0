@@ -88,13 +88,6 @@ public:
     int get_games() const;
 
     /*
-    * Return the team's top player (top scorer)
-    * @param - none
-    * @return - a pointer to the team's top scorer
-    */
-    const Player* get_top_scorer() const;
-
-    /*
     * Return the team's ID number
     * @param - none
     * @return - the team's ID number
@@ -178,20 +171,6 @@ public:
     * @return - void
     */
     void update_top_player();
-
-    /*
-    * Updates the closest right team
-    * @param - the new closest right team
-    * @return - void
-    */
-    void update_closest_right(Team* team2);
-
-    /*
-    * Updates the closest left team
-    * @param - the new closest left team
-    * @return - void
-    */
-    void update_closest_left(Team* team1);
 
     /*
     * Helper function for add_player in world_cup:
