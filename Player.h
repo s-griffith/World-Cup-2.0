@@ -22,7 +22,7 @@ public:
     * @return - A new instance of Player.
     */
     Player(const int playerId, const int gamesPlayed, const int ability, const int cards, const bool goalKeeper,
-           permutation_t& spirit, permutation_t& partialSpirit, Team* tmpTeam, Player* parent);
+           const permutation_t& spirit, const permutation_t& partialSpirit, Team* tmpTeam, Player* parent);
 
     /*
     * Copy Constructor and Assignment Operator of Player class
@@ -91,6 +91,8 @@ public:
     * @return - pointer to player
     */
     Player* get_parent();
+
+    void detach();
 
     /*
     * Update the number of games the player played

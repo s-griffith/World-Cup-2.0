@@ -3,7 +3,7 @@
 //--------------------------------Constructor and Destructor------------------------------------
 
 Player::Player(const int playerId, const int gamesPlayed, const int ability, const int cards, const bool goalKeeper,
-               permutation_t& spirit, permutation_t& partialSpirit, Team* tmpTeam, Player* parent) :
+               const permutation_t& spirit, const permutation_t& partialSpirit, Team* tmpTeam, Player* parent) :
     m_playerId(playerId),
     m_gamesPlayed(gamesPlayed),
     m_ability(ability),
@@ -75,6 +75,12 @@ Team* Player::get_team()
 Player* Player::get_parent()
 {
     return m_parent;
+}
+
+
+void Player::detach() 
+{
+	m_team = nullptr;
 }
 
 //---------------------------------------Setters---------------------------------------------
@@ -156,7 +162,7 @@ Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int othe
         otherTeam->m_parent = this;
         //Update partial spirit for team
         otherTeam->m_partialSpirit = currentTeamSpirit * m_partialSpirit;
-        otherTeam->m_partialSpirit = m_parent->m_partialSpirit->inv() * otherTeam->m_partialSpirit;
+        otherTeam->m_partialSpirit = m_parent->m_partialSpirit.inv() * otherTeam->m_partialSpirit;
         //Update games played of other team
         otherTeam->m_gamesPlayed -= m_gamesPlayed;
         //Return root of new player upside-down tree
@@ -166,7 +172,7 @@ Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int othe
     m_parent = otherTeam;
     //Update partial spirit for team
     otherTeam->m_partialSpirit = currentTeamSpirit * m_partialSpirit;
-    m_partialSpirit = m_parent->m_partialSpirit->inv() * m_partialSpirit;
+    m_partialSpirit = m_parent->m_partialSpirit.inv() * m_partialSpirit;
     //Update games played of current team
     m_gamesPlayed -= m_parent->m_gamesPlayed;
     //Return root of new player upside-down tree

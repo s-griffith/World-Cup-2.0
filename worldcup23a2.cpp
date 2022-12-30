@@ -19,7 +19,7 @@ world_cup_t::~world_cup_t()
         int currentSize = calculate_hash_size(m_currentHashIndex);
         for (int i = 0; i < currentSize; i++) {
             if (m_playersHashTable[i] != nullptr) {
-                m_playersHashTable[i]->erase_data();
+                m_playersHashTable[i]->erase_data(m_playersHashTable[i]->m_node);
                 delete m_playersHashTable[i];
             }
         }
@@ -49,7 +49,7 @@ StatusType world_cup_t::add_team(int teamId)
         return StatusType::FAILURE;
     }
     try {
-        m_teamsByAbility.insert(); //*********************************************************************
+        m_teamsByAbility.insert(newTeam, teamId, 0);
     }
     catch(const InvalidID& e) {
         delete newTeam;
@@ -67,7 +67,7 @@ StatusType world_cup_t::remove_team(int teamId)
     try {
         team = m_teamsByID.search_and_return_data(teamId);
         m_teamsByID.remove(teamId);
-        m_teamsByAbility.remove(teamId, team->get_goals(), team->get_cards());***********************************************
+        m_teamsByAbility.remove(teamId, team->get_ability());
         team->get_allPlayers()->detach();
         delete team;
     }
@@ -96,19 +96,19 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         return StatusType::FAILURE;
     }
     //The inputs are okay - continue adding player
-    Player* playerRoot = tmpTeam->get_allPlayers(); //-------------------------------------------------------------------Add to teams
+    Player* playerRoot = tmpTeam->get_allPlayers();
     //Correlate the player's games played with the total team games and the root player games played
-    int playerNumGames = gamesPlayed - tmpTeam->get_games();  //-------------------------------------------------------------------Add to teams
+    int playerNumGames = gamesPlayed - tmpTeam->get_games();
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
-        playerNumGames -= parent->get_gamesPlayed();
+        playerNumGames -= playerRoot->get_gamesPlayed();
     }
     //Add the player's partial spirit (it's team's spirit only including the players that joined before the current player)
     permutation_t partialSpirit = tmpTeam->get_teamSpirit(); //-------------------------------------------------------------------Add to teams + make sure operator= works
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
         //Inverse the root's spirit and add it to the player's partial spirit (it will be added back in the future)
-        partialSpirit = playerRoot->get_spirit()->inv() * partialSpirit;
+        partialSpirit = playerRoot->get_spirit().inv() * partialSpirit;
         //Add the current player's spirit to its partial spirit
         partialSpirit = partialSpirit * spirit;
     }
@@ -117,7 +117,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     }
     Player* tmpPlayer;
     try {
-        tmpPlayer = new Player(playerId, player_num_games, ability, cards, goalKeeper, spirit, partialSpirit, tmpTeam, playerRoot);
+        tmpPlayer = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, spirit, partialSpirit, tmpTeam, playerRoot);
     }
     catch (const std::bad_alloc& e) {
         return StatusType::ALLOCATION_ERROR;
@@ -141,15 +141,15 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         return StatusType::ALLOCATION_ERROR;
     }
     //If this is the first player in the team, update team pointer to it's players
-    if (parent == nullptr) {
+    if (playerRoot == nullptr) {
         tmpTeam->set_teamPlayers(tmpPlayer); //-------------------------------------------------------------------Add to teams
     }
     //Remove the team from the tree sorted by player ability, and update the team's stats
-    m_teamsByAbility.remove(tmpTeam->get_score(), tmpTeam->get_spirit_strength(), tmpTeam->get_teamID());//------------------------------------Add to teams + MultiTree
+    m_teamsByAbility.remove(tmpTeam->get_teamID(), tmpTeam->get_ability());
     tmpTeam->add_player(tmpPlayer, playerId, spirit, ability, cards, goalKeeper);
     //Re-insert the team from the tree sorted by player ability
     try {
-        m_teamsByAbility.insert(tmpTeam->get_score(), tmpTeam->get_spirit_strength(), tmpTeam->get_teamID());//------------------------------------Add to teams + MultiTree
+        m_teamsByAbility.insert(tmpTeam, tmpTeam->get_teamID(), tmpTeam->get_ability());
     }
     catch (const InvalidID& e) {}
     catch (const std::bad_alloc& e) {
@@ -193,7 +193,7 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
         result = 3;
     }
     else {
-        int spirit1 = team1->get_spirit_strength();
+        int spirit1 = team1->get_spirit_strength(); //This doesn't need to be a function anymore
         int spirit2 = team2->get_spirit_strength();
         if (spirit1 > spirit2) {
             team1->update_points_won();
@@ -232,7 +232,7 @@ output_t<int> world_cup_t::num_played_games_for_player(int playerId)
     int gamesPlayed = tmpPlayer->get_gamesPlayed();
     //If player isn't the root of the team's players
     if (tmpPlayer->get_parent() != nullptr) {
-        gamesPlayed += tmpPlayer->get_parent()->get_gamesPlayed() + tmpPlayer->get_parent->get_team()->get_games();
+        gamesPlayed += tmpPlayer->get_parent()->get_gamesPlayed() + tmpPlayer->get_parent()->get_team()->get_games();
     }
     else {
         gamesPlayed += tmpPlayer->get_team()->get_games();
@@ -380,7 +380,7 @@ void world_cup_t::enlarge_hash_table()
 {
     int currentSize = calculate_hash_size(m_currentHashIndex);
     int newSize = calculate_hash_size(m_currentHashIndex + 1);
-    Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[new_size];
+    Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[newSize];
     for (int i = 0; i < currentSize; i++) {
         newTable[i] = m_playersHashTable[i];
     }
