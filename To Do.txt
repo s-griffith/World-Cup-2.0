@@ -45,13 +45,6 @@ Lior:
 
 
 Sarah:
--add_team()
-	Update AVL Multitree
--remove_team()
-	Update AVL Multitree
-	Use the function knockout team ID to make the root of the players team ID negative if the team it plays for was kicked out of the tournament***********UPDATE: turn players team to nullptr (not negative)
--play_match()
--get_team_points()
 -get_ith_pointless_ability(): organize the teams in a tree while holding their index number like in the lecture, according to  total player ability
 	Use the AVL MultiTree and index saving
 -buy_team()
@@ -72,16 +65,8 @@ Sarah:
 -Update Team class
 
 
-
-
-functions to add to Teams class: **************************************************************************************************UPDATE
--in teams destructor, make allPlayers = nullptr (we will deallocate the players before then)
--get_allPlayers() - returns pointer to the player of the team (return type: Player*)
--get_teamSpirit() - returns team spirit (return type: permuatation_t&)
--set_allPlayers(Player* player) - sets the team's player pointer to the given player pointer
--get_games() - returns the number of games the team played (return type: int)
--add_new_player_spirit(permuation_t& spirit) - updates team spirit to the right (important! right and left are not the same): m_teamSpirit = m_teamSpirit * spirit
--add_new_player_ability(int ability) - add to the team's current total players' ability
--get_capablity() - returns the team's capability, calculated according to "play_match": points + m_totalPlayersAbility (return type: int)
--get_spirit_strength() - returns the team's spirit strength, calculated according to "play_match": based on team spirit (return type: int)
--get_teamID() - returns the teams ID (return type: int)
+Assumptions from Class Player:
+-function detach() that sets the teamID of the root of the players in the team to nullptr*********************************
+	void Player::detach() {
+		m_team = nullptr;
+	}

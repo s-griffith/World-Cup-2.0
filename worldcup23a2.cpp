@@ -32,14 +32,49 @@ world_cup_t::~world_cup_t()
 
 StatusType world_cup_t::add_team(int teamId)
 {
-	// TODO: Your code goes here
+	if (teamId <= 0) {
+        return StatusType::INVALID_INPUT;
+    }
+    Team* newTeam;
+    try  {
+        newTeam = new Team(teamId);
+        m_teamsByID.insert(newTeam, teamId);
+    }
+    catch (const std::bad_alloc& e) {
+        delete newTeam;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    catch(const InvalidID& e) {
+        delete newTeam;
+        return StatusType::FAILURE;
+    }
+    try {
+        m_teamsByAbility.insert(); //*********************************************************************
+    }
+    catch(const InvalidID& e) {
+        delete newTeam;
+        return StatusType::FAILURE;
+    }
 	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::remove_team(int teamId)
 {
-	// TODO: Your code goes here
-	return StatusType::FAILURE;
+    if (teamId <= 0) {
+        return StatusType::INVALID_INPUT;
+    }
+    Team* team;
+    try {
+        team = m_teamsByID.search_and_return_data(teamId);
+        m_teamsByID.remove(teamId);
+        m_teamsByAbility.remove(teamId, team->get_goals(), team->get_cards());***********************************************
+        team->get_allPlayers()->detach();
+        delete team;
+    }
+    catch(const NodeNotFound& e) {
+        return StatusType::FAILURE;
+    }
+	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::add_player(int playerId, int teamId,
@@ -63,13 +98,13 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     //The inputs are okay - continue adding player
     Player* playerRoot = tmpTeam->get_allPlayers(); //-------------------------------------------------------------------Add to teams
     //Correlate the player's games played with the total team games and the root player games played
-    int playerNumGames = gamesPlayed - tmpTeam.get_games();  //-------------------------------------------------------------------Add to teams
+    int playerNumGames = gamesPlayed - tmpTeam->get_games();  //-------------------------------------------------------------------Add to teams
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
         playerNumGames -= parent->get_gamesPlayed();
     }
     //Add the player's partial spirit (it's team's spirit only including the players that joined before the current player)
-    permutation_t partialSpirit = tmpTeam.get_teamSpirit(); //-------------------------------------------------------------------Add to teams + make sure operator= works
+    permutation_t partialSpirit = tmpTeam->get_teamSpirit(); //-------------------------------------------------------------------Add to teams + make sure operator= works
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
         //Inverse the root's spirit and add it to the player's partial spirit (it will be added back in the future)
@@ -107,15 +142,14 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     }
     //If this is the first player in the team, update team pointer to it's players
     if (parent == nullptr) {
-        tmpTeam->set_allPlayers(tmpPlayer); //-------------------------------------------------------------------Add to teams
+        tmpTeam->set_teamPlayers(tmpPlayer); //-------------------------------------------------------------------Add to teams
     }
     //Remove the team from the tree sorted by player ability, and update the team's stats
-    m_teamsByAbility.remove(tmpTeam->get_capablity(), tmpTeam->get_spirit_strength(), tmpTeam->get_teamID());//------------------------------------Add to teams + MultiTree
-    tmpTeam->add_new_player_spirit(spirit); //-------------------------------------------------------------------Add to teams
-    tmpTeam->add_new_player_ability(ability); //-------------------------------------------------------------------Add to teams
+    m_teamsByAbility.remove(tmpTeam->get_score(), tmpTeam->get_spirit_strength(), tmpTeam->get_teamID());//------------------------------------Add to teams + MultiTree
+    tmpTeam->add_player(tmpPlayer, playerId, spirit, ability, cards, goalKeeper);
     //Re-insert the team from the tree sorted by player ability
     try {
-        m_teamsByAbility.insert(tmpTeam->get_capablity(), tmpTeam->get_spirit_strength(), tmpTeam->get_teamID());//------------------------------------Add to teams + MultiTree
+        m_teamsByAbility.insert(tmpTeam->get_score(), tmpTeam->get_spirit_strength(), tmpTeam->get_teamID());//------------------------------------Add to teams + MultiTree
     }
     catch (const InvalidID& e) {}
     catch (const std::bad_alloc& e) {
@@ -127,8 +161,57 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
 
 output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
 {
-	// TODO: Your code goes here
-	return StatusType::SUCCESS;
+    int result = -1;
+    if (teamId1 <= 0 || teamId2 <= 0 || teamId1 == teamId2) {
+        return output_t<int>(StatusType::INVALID_INPUT);
+    }
+    Team* team1;
+    Team* team2;
+    try {
+        team1 = m_teamsByID.search_and_return_data(teamId1);
+    }
+    catch (const NodeNotFound&) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    try {
+        team2 = m_teamsByID.search_and_return_data(teamId2);
+    }
+    catch (const NodeNotFound&) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    if (!team1->is_valid() || !team2->is_valid()) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    int score1 = team1->get_score();
+    int score2 = team2->get_score();
+    if (score1 > score2) {
+        team1->update_points_won();
+        result = 1;
+    }
+    else if (score2 > score1) {
+        team2->update_points_won();
+        result = 3;
+    }
+    else {
+        int spirit1 = team1->get_spirit_strength();
+        int spirit2 = team2->get_spirit_strength();
+        if (spirit1 > spirit2) {
+            team1->update_points_won();
+            result = 2;
+        }
+        else if (spirit2 > spirit1) {
+            team2->update_points_won();
+            result = 4;
+        }
+        else {
+            team1->update_points_tie();
+            team2->update_points_tie();
+            result = 0;
+        }
+    }
+    team1->add_game();
+    team2->add_game();
+	return output_t<int>(result);
 }
 
 output_t<int> world_cup_t::num_played_games_for_player(int playerId)
@@ -193,10 +276,20 @@ output_t<int> world_cup_t::get_player_cards(int playerId)
     return output_t<int>(tmpPlayer->get_cards());
 }
 
-output_t<int> world_cup_t::get_team_points(int teamId)
+output_t<int> world_cup_t::get_team_points(int teamId) //Is this really the only thing we need to do here? Am I missing something???
 {
-	// TODO: Your code goes here
-	return 30003;
+    if (teamId <= 0) {
+        return StatusType::INVALID_INPUT;
+    }
+	Team* t;
+    try {
+        t = m_teamsByID.search_and_return_data(teamId);
+    }
+    catch (const NodeNotFound& e) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    int points = t->get_points();
+	return output_t<int>(points);
 }
 
 output_t<int> world_cup_t::get_ith_pointless_ability(int i)
@@ -245,7 +338,7 @@ bool world_cup_t::check_player_exists(int playerId)//***************************
     try {
         m_playersHashTable[arrayIndex]->search_specific_id(playerId);
     }
-    catch (const NodeNotFound()& e) {
+    catch (const NodeNotFound& e) {
         return false;
     }
     return true;
@@ -259,7 +352,7 @@ bool world_cup_t::check_player_kicked_out(int playerId)
     try {
         tmpPlayer = m_playersHashTable[arrayIndex]->search_and_return_data(playerId);
     }
-    catch (const NodeNotFound()& e) {
+    catch (const NodeNotFound& e) {
         return true;
     }
     //Union-find algorithm - compress path from player to root

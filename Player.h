@@ -54,6 +54,8 @@ public:
     */
     int get_gamesPlayed() const;
 
+    int get_ability() const;
+
     /*
     * Return the number of cards the player received
     * @return - integer of the number of cards the player received
