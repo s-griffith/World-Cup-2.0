@@ -20,6 +20,8 @@
 #include "Teams.h"
 #include "AVLTree.h"
 #include "GenericNode.h"
+#include "AVLMultiTree.h"
+#include "ComplexNode.h"
 #include <memory.h>
 
 class world_cup_t {
