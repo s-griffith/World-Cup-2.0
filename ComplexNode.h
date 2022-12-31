@@ -52,6 +52,8 @@ public:
     */
     int unite_insert(Player** players, int index);
 
+    int getID() const;
+
 private:
 
     /*
@@ -96,6 +98,8 @@ private:
     */
     void update_height();
 
+    void update_children();
+
     /*
      * Helper function for get_all_players in world_cup:
      * Recursively inserts the player ID's of the data of the tree into a given array
@@ -114,7 +118,7 @@ private:
     ComplexNode<T>* m_left;
     ComplexNode<T>* m_right;
     int m_ability;
-    int m_index;
+    int m_numChildren;
 
     /*
      * The following classes are friend classes in order to allow full access to private fields and functions of
@@ -152,7 +156,7 @@ ComplexNode<T>::ComplexNode() :
         m_left(nullptr),
         m_right(nullptr),
         m_ability(0),
-        m_index(0)
+        m_numChildren(0)
 {}
 
 
@@ -163,7 +167,7 @@ ComplexNode<T>::ComplexNode(T data) :
         m_left(nullptr),
         m_right(nullptr),
         m_ability(data->get_ability()),
-        m_index(0)
+        m_numChildren(0)
 {}
 
 
@@ -175,6 +179,11 @@ int ComplexNode<T>::unite_insert(Player** players, int index) {
         index = m_right->unite_insert(players, index);
     }
     return index;
+}
+
+template<class T>
+int ComplexNode<T>::getID() const {
+    return this->m_id;
 }
 
 //-----------------------------------------Rotations--------------------------------------------
@@ -208,6 +217,8 @@ typename ComplexNode<T>::ComplexNode* ComplexNode<T>::ll_rotation(ComplexNode<T>
     m_left = m_left->m_right;
     //Changing A->Ar to A->B
     m_parent->m_right = this;
+    update_children();
+    m_parent->update_children();
     return tmpToReturn;
 }
 
@@ -235,6 +246,8 @@ typename ComplexNode<T>::ComplexNode* ComplexNode<T>::rr_rotation(ComplexNode<T>
     }
     m_right = m_right->m_left;
     m_parent->m_left = this;
+    update_children();
+    m_parent->update_children();
     return tmpToReturn;
 }
 
@@ -295,6 +308,19 @@ void ComplexNode<T>::update_height()
     }
 }
 
+template<class T>
+void ComplexNode<T>::update_children()
+{
+    int left = 0;
+    int right = 0;
+    if (m_left != nullptr) {
+        left = m_left->m_numChildren;
+    }
+    if (m_right != nullptr) {
+        right = m_right->m_numChildren;
+    }
+    m_numChildren = left + right + 1;
+}
 
 //--------------------------------------Private Helper Function for world_cup---------------------------------------
 
@@ -330,7 +356,7 @@ void ComplexNode<T>::printNode() {
     else {
         right = m_right->m_id;
     }
-    std::cout << "ID = " << this->m_id << ", Ability = " << this->m_ability << ", Parent = " << parent << ", Left = " 
+    std::cout << "ID = " << this->m_id << ", Ability = " << this->m_ability << ", NumChildren = " << this->m_numChildren << ", Parent = " << parent << ", Left = " 
             << left << ", Right = " << right << std::endl;
 }
 

@@ -96,6 +96,8 @@ public:
      */
     void update_closest(const int playerId, const int goals, const int cards);
 
+    ComplexNode<T>* find_index(ComplexNode<T>* node, const int index, ComplexNode<T>* previous);
+
     /*
      * Helper function for unite_teams in world_cup:
      * Creates a tree from a given ordered array
@@ -150,8 +152,8 @@ void MultiTree<T>::insert(T data, const int id, const int ability) {
         this->m_node->m_data = data;
         this->m_node->m_ability = ability;
         this->m_node->m_id = id;
-        this->m_node->m_index++;
         this->m_node->m_height++;
+        this->m_node->m_numChildren++;
         return;
     }
     //Find the proper location of the new node (when it's not the first):
@@ -195,7 +197,7 @@ void MultiTree<T>::insert(T data, const int id, const int ability) {
     node->m_ability = ability;
     node->m_id = id;
     node->m_height = 0;
-    node->m_index = 0;
+    node->m_numChildren = 1;
     if (node->m_ability < parent->m_ability) {
         parent->m_left = node;
     }
@@ -210,7 +212,15 @@ void MultiTree<T>::insert(T data, const int id, const int ability) {
     else {
         parent->m_right = node;
     }
+    //Go back up the tree to update the number of nodes in each of the parents' subtrees:
+    x = parent;
+    int rightChildren = 0, leftChildren = 0;
+    while (x != nullptr) {
+        x->update_children();
+        x = x->m_parent;
+    }
     this->rebalance_tree(node->m_parent);
+    this->m_node->update_children();
 }
 
 
@@ -223,14 +233,21 @@ void MultiTree<T>::remove(const int id, const int ability) {
         this->m_node->m_bf = 0;
         this->m_node->m_id = 0;
         this->m_node->m_ability = 0;
-        this->m_node->m_index = 0;
+       // this->m_node->m_index = -1;
+        this->m_node->m_numChildren = 0;
         return;
     }
     ComplexNode<T>* toRemove = &(search_specific_id(id, ability));
+    ComplexNode<T>* x = toRemove->m_parent;
     ComplexNode<T>* nodeToFix = Tree<ComplexNode<T>, T>::make_node_leaf(toRemove);
+    while (x != nullptr) {
+        x->m_numChildren--;
+        x = x->m_parent;
+    }
     delete toRemove;
     //Go up the tree and check the balance factors and complete needed rotations
     Tree<ComplexNode<T>, T>::rebalance_tree(nodeToFix);
+    this->m_node->update_children();
 }
 
 
@@ -310,6 +327,27 @@ void MultiTree<T>::update_closest(const int playerId, const int goals, const int
     }
 }
 
+template <class T>
+ComplexNode<T>* MultiTree<T>::find_index(ComplexNode<T>* node, const int index, ComplexNode<T>* previous) {
+    int leftChildren = 0;
+    if (node->m_left != nullptr) {
+        leftChildren = node->m_left->m_numChildren;
+    }
+    if (leftChildren > index) {
+        return find_index(node->m_left, index, node);
+    }
+    else if (index == leftChildren) {
+        return node;
+    }
+    else {
+        if (node->m_right != nullptr) {
+            return find_index(node->m_right, index-leftChildren-1, node);
+        }
+        else {
+            return node;
+        }
+    }
+}
 
 template <class T>
 typename ComplexNode<T>::ComplexNode* MultiTree<T>::findLeftClosest(ComplexNode<T>* currentPlayerNode)
