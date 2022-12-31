@@ -133,6 +133,11 @@ void Team::update_num_cards(const int cards) {
     m_numCards += cards;
 }
 
+void Team::update_players(Player* player) {
+    m_players = player;
+}
+
+
 
 //-------------------------------------Helper Functions for WorldCup----------------------------
 
@@ -152,6 +157,18 @@ StatusType Team::add_player(Player* player, const int id, const permutation_t& s
 void Team::update_team_stats(const int goals, const int cards){
     update_num_goals(goals);
     update_num_cards(cards);
+}
+
+
+void Team::teams_unite(Team& bought) {
+    m_points += bought.m_points;
+    m_numPlayers += bought.m_numPlayers;
+    m_numGoalkeepers += bought.m_numGoalkeepers;
+    m_numGoals += bought.m_numGoals;
+    m_numCards += bought.m_numCards;
+    m_numGames = 0;
+    m_totalAbility += bought.m_totalAbility;
+    m_teamSpirit = m_teamSpirit * bought.m_teamSpirit; //Is this correct?
 }
 
 
@@ -245,16 +262,3 @@ void Team::mergeByScore(Player** nPlayers, Player** players1, Player** players2,
 
 //--------------------------------world_cup Players Functions----------------------------
 
-
-//--------------------------------knockout_winner----------------------------
-
-
-
-void Team::knockout_unite(Team& winner, Team& loser) {
-    winner.m_numCards += loser.m_numCards;
-    winner.m_numGames += loser.m_numGames;
-    winner.m_numGoalkeepers += loser.m_numGoalkeepers;
-    winner.m_numGoals += loser.m_numGoals;
-    winner.m_numPlayers += loser.m_numPlayers;
-    winner.m_points += loser.m_points;
-}

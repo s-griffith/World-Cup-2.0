@@ -170,7 +170,7 @@ public:
     * @param - none
     * @return - void
     */
-    void update_top_player();
+    void update_players(Player* player);
 
     /*
     * Helper function for add_player in world_cup:
@@ -276,7 +276,7 @@ public:
     * @param - a reference to the winning and losing teams
     * @return - void
     */
-    void knockout_unite(Team& winner, Team& loser);
+    void teams_unite(Team& bought);
 
 private:
 

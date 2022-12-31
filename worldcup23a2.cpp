@@ -332,9 +332,53 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
     return output_t<permutation_t>(playerSpirit);
 }
 
-StatusType world_cup_t::buy_team(int teamId1, int teamId2) //decrease num of teams if success
+StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 {
-	// TODO: Your code goes here
+    if (teamId1 <= 0 || teamId2 <= 0 || teamId1 == teamId2) {
+        return StatusType::FAILURE;
+    }
+    Team* buyer;
+    Team* bought;
+    try {
+        buyer = m_teamsByID.search_and_return_data(teamId1);
+    }
+    catch (const NodeNotFound&) {
+        return StatusType::FAILURE;
+    }  
+    try {
+        bought = m_teamsByID.search_and_return_data(teamId2);
+    }
+    catch (const NodeNotFound&) {
+        return StatusType::FAILURE;
+    }
+    int prevAbility = buyer->get_ability();
+    if (buyer->get_allPlayers() != nullptr && bought->get_allPlayers() != nullptr) {
+        buyer->get_allPlayers()->update_gamesPlayed(buyer->get_games());
+        bought->get_allPlayers()->update_gamesPlayed(bought->get_games());
+        Player* root = buyer->get_allPlayers()->players_union(bought->get_allPlayers(), buyer->get_num_players(), 
+                                        bought->get_num_players(), buyer->get_teamSpirit(), bought->get_teamSpirit());
+        root->update_team(buyer);
+        buyer->update_players(root);
+    }
+    else if (buyer->get_allPlayers() == nullptr && bought->get_allPlayers() != nullptr) {
+        buyer->update_players(bought->get_allPlayers());
+        bought->get_allPlayers()->update_team(buyer);
+    }
+    //If buyer has players and bought is empty, there is nothing to do!
+    //Merge the internal fields of the two teams
+    buyer->teams_unite(*bought);
+    //Delete the bought team from the system:
+    remove_team(teamId2);
+    //Fix the location of the united team in the teams by ability tree:
+    m_teamsByAbility.remove(teamId1, prevAbility);
+    try {
+        m_teamsByAbility.insert(buyer, teamId1, buyer->get_ability());
+    }
+    catch (std::bad_alloc&) {
+        return StatusType::ALLOCATION_ERROR;
+    }
+    //Decrease the total number of teams in the system:
+    m_numTeams--;
 	return StatusType::SUCCESS;
 }
 
