@@ -4,11 +4,10 @@ world_cup_t::world_cup_t() :
     m_numTotalPlayers(0),
     m_numTeams(0),
     m_currentHashIndex(3),
-    m_currentHashSize(0),
+    m_currentHashSize(7),
     m_teamsByID(),
     m_teamsByAbility()
 {
-    m_currentHashSize = calculate_hash_size(m_currentHashIndex);
     m_playersHashTable = new Tree<GenericNode<Player*>, Player*>*[m_currentHashSize];
     for (int i = 0; i < m_currentHashSize; i++) {
         m_playersHashTable[i] = new Tree<GenericNode<Player*>, Player*>();
@@ -420,19 +419,9 @@ bool world_cup_t::check_player_kicked_out(int playerId)
 }
 
 
-int world_cup_t::calculate_hash_size(int index)
-{
-    int size = 1;
-    for (int i=0; i < index; i++) {
-        size *= 2;
-    }
-    return size - 1;
-}
-
-
 void world_cup_t::enlarge_hash_table()
 {
-    int newSize = calculate_hash_size(m_currentHashIndex + 1);
+    int newSize = ((m_currentHashSize + 1 ) * 2 ) - 1;
     Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[newSize];
     for (int i = 0; i < m_currentHashSize; i++) {
         newTable[i] = m_playersHashTable[i];

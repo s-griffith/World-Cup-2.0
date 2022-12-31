@@ -57,12 +57,6 @@ private:
     bool check_player_kicked_out(int playerId);
 
     /*
-    * Calculate size of hash table according to index
-    * @return - integer that is equal to 2^index - 1
-    */
-    int calculate_hash_size(int index);
-
-    /*
     * When the number of players = size of table, the table needs to be enlarged to ensure time complexity of O(1)
     *   for inserting + searching for players
     * @return - none

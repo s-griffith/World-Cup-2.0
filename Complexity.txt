@@ -30,11 +30,11 @@ Add_Player:
         -happens only when the number of players reaches the size of the hash table --> happens only once in a while
         -average: use the עומס פקטור
         -when it does happen (happens every n actions: for us every n new players added): 
-            -calculate_hash_size: O(logn)
+            -calculate the new hash size: O(1)
             -first for loop: O(n)
             -second for loop: O(n)
             -destroy_old_hash_table: O(n)
-            -Total: O(n+logn) = O(n) -> averge complexity for n actions: n/n=O(1)
+            -Total: O(n) = O(n) -> averge complexity for n actions: n/n=O(1)
     -insert_player_hash_table: 
         -hash_function: O(1)
         -insert: on average, the player is inserted into an empty tree --> O(1) because the insertion is directly into the root
