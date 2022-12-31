@@ -96,7 +96,7 @@ public:
      */
     void update_closest(const int playerId, const int goals, const int cards);
 
-    ComplexNode<T>* find_index(ComplexNode<T>* node, const int index, ComplexNode<T>* previous);
+    ComplexNode<T>* find_index(ComplexNode<T>* node, const int index);
 
     /*
      * Helper function for unite_teams in world_cup:
@@ -328,20 +328,20 @@ void MultiTree<T>::update_closest(const int playerId, const int goals, const int
 }
 
 template <class T>
-ComplexNode<T>* MultiTree<T>::find_index(ComplexNode<T>* node, const int index, ComplexNode<T>* previous) {
+ComplexNode<T>* MultiTree<T>::find_index(ComplexNode<T>* node, const int index) {
     int leftChildren = 0;
     if (node->m_left != nullptr) {
         leftChildren = node->m_left->m_numChildren;
     }
     if (leftChildren > index) {
-        return find_index(node->m_left, index, node);
+        return find_index(node->m_left, index);
     }
     else if (index == leftChildren) {
         return node;
     }
     else {
         if (node->m_right != nullptr) {
-            return find_index(node->m_right, index-leftChildren-1, node);
+            return find_index(node->m_right, index-leftChildren-1);
         }
         else {
             return node;
