@@ -1,0 +1,40 @@
+remove_team -1
+remove_team -1
+add_player_cards -1 1171203126
+get_ith_pointless_ability 0
+get_player_cards -1
+buy_team -1 -1
+get_ith_pointless_ability 0
+add_player_cards -1 -645941690
+get_team_points -1
+play_match -1 -1
+add_team 1005142376
+buy_team 1005142376 1005142376
+get_player_cards -1
+get_player_cards -1
+add_player -891408869 1005142376 5,4,2,3,1 -1291266814 1770912056 -1011483619 true
+buy_team 1005142376 1005142376
+get_partial_spirit -891408869
+remove_team 1005142376
+remove_team -1
+remove_team -1
+remove_team -1
+get_ith_pointless_ability 0
+get_player_cards -891408869
+get_player_cards -891408869
+add_player_cards -891408869 -734471025
+buy_team -1 -1
+get_team_points -1
+remove_team -1
+get_ith_pointless_ability 0
+add_player_cards -891408869 376300942
+remove_team -1
+add_team -2074648355
+buy_team -2074648355 -2074648355
+play_match -2074648355 -2074648355
+add_player_cards -891408869 16293631
+add_team 827256429
+add_player_cards -891408869 -1363776635
+play_match 827256429 827256429
+add_player_cards -891408869 -1421556092
+add_player_cards -891408869 1080753967

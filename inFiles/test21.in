@@ -1,0 +1,40 @@
+get_partial_spirit -1
+get_team_points -1
+get_partial_spirit -1
+remove_team -1
+get_player_cards -1
+add_player_cards -1 1246497702
+get_player_cards -1
+get_partial_spirit -1
+buy_team -1 -1
+get_ith_pointless_ability 0
+add_player_cards -1 1601800934
+add_team 595265637
+add_player 1664157226 595265637 4,5,1,3,2 1795985429 329813078 690916214 false
+get_team_points 595265637
+get_ith_pointless_ability 0
+get_partial_spirit 1664157226
+get_partial_spirit 1664157226
+get_partial_spirit 1664157226
+add_team 1438397887
+get_team_points 1438397887
+num_played_games_for_player 1664157226
+play_match 1438397887 1438397887
+remove_team 1438397887
+get_partial_spirit 1664157226
+add_player_cards 1664157226 511163677
+remove_team -1
+num_played_games_for_player 1664157226
+remove_team -1
+play_match -1 -1
+get_player_cards 1664157226
+add_player_cards 1664157226 1926026158
+get_partial_spirit 1664157226
+num_played_games_for_player 1664157226
+get_ith_pointless_ability 0
+remove_team -1
+get_team_points -1
+play_match -1 -1
+num_played_games_for_player 1664157226
+add_player_cards 1664157226 328628518
+get_partial_spirit 1664157226

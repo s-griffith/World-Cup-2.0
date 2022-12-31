@@ -1,0 +1,40 @@
+get_player_cards -1
+add_player -966195924 -1 1,5,2,3,4 1154475436 -18607537 -533765958 false
+add_team -1452464650
+play_match -1452464650 -1452464650
+add_team -2115329617
+buy_team -2115329617 -2115329617
+add_player_cards -966195924 -66479545
+remove_team -2115329617
+buy_team -1 -1
+add_team 2100910050
+add_player 1334770018 2100910050 2,5,4,1,3 -1040734043 -6595979 710657026 true
+add_player_cards 1334770018 -850052806
+add_player_cards 1334770018 -154161005
+add_team 1437490136
+buy_team 1437490136 1437490136
+get_player_cards 1334770018
+get_player_cards 1334770018
+get_player_cards 1334770018
+play_match 1437490136 1437490136
+add_player_cards 1334770018 315786949
+get_ith_pointless_ability 0
+get_player_cards 1334770018
+buy_team 1437490136 1437490136
+num_played_games_for_player 1334770018
+add_team -1432539215
+get_partial_spirit 1334770018
+add_player 2035092520 -1432539215 1,3,4,2,5 -17728526 -137050122 -1107538843 false
+num_played_games_for_player 2035092520
+get_player_cards 2035092520
+add_team 203822723
+add_player -1396582359 203822723 5,2,4,3,1 -1677194489 630574314 1042744869 false
+add_team -786816385
+get_ith_pointless_ability 0
+remove_team -786816385
+get_ith_pointless_ability 0
+num_played_games_for_player -1396582359
+play_match -1 -1
+get_team_points -1
+buy_team -1 -1
+remove_team -1

@@ -1,0 +1,4 @@
+add_team 1
+add_team 2
+add_team 3
+remove_team 3
