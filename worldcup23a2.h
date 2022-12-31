@@ -28,6 +28,8 @@ class world_cup_t {
 private:
     //Total number of players in world cup (including inactive players)
     int m_numTotalPlayers;
+    //Total number of teams in the world cup
+    int m_numTeams;
     //Current hash index, used to calculate the hash table size
     int m_currentHashIndex;
     //Hash table of AVL trees of players

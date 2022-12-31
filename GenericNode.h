@@ -51,7 +51,7 @@ public:
 
     int numOfTeams(const int minTeamID, const int maxTeamID);
 
-    /*
+    
      * Helper function for knockout in world_cup:
      * Adds valid teams within a given range to a given array
      * @param - The array to add the teams to and the minimum and maximum team ID's
@@ -59,7 +59,7 @@ public:
 
     void addTeams(Team* teams, const int minTeamId, const int maxTeamId);
 
-    /*
+    
      * Helper function for unite_teams in world_cup:
      * Updates the new team ID of each player
      * @param - a pointer to the new team containing the players
@@ -67,17 +67,17 @@ public:
 
     void inorderWalkTeamID(Team* team);
 
-    /*
+    
     * Helper function for unite_teams in world_cup:
     * Inserts players into a given array, node by node
     * @param - an array, current index
     * @return - current index
 
     int unite_insert(Player** players, int index);
-    */
+    *
     //--------------------------------------------------------------------------------
 
-    /*
+    
     * Returns the height of a node
     * @param - none
     * @return - height
@@ -137,7 +137,7 @@ private:
 
     typename GenericNode<T>::GenericNode* getFirstTeam(const int minTeamId, const int maxTeamId);
 
-    /*
+    
      * Helper function for unite_teams in world_cup:
      * Updates the number of games played, player by player
      * @param - The number of games played by the player's team

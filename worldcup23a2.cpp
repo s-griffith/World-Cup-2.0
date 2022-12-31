@@ -2,6 +2,7 @@
 
 world_cup_t::world_cup_t() :
     m_numTotalPlayers(0),
+    m_numTeams(0),
     m_currentHashIndex(3),
     m_teamsByID(),
     m_teamsByAbility()
@@ -55,6 +56,7 @@ StatusType world_cup_t::add_team(int teamId)
         delete newTeam;
         return StatusType::FAILURE;
     }
+    m_numTeams++;
 	return StatusType::SUCCESS;
 }
 
@@ -68,12 +70,16 @@ StatusType world_cup_t::remove_team(int teamId)
         team = m_teamsByID.search_and_return_data(teamId);
         m_teamsByID.remove(teamId);
         m_teamsByAbility.remove(teamId, team->get_ability());
-        team->get_allPlayers()->detach();
+        if (team->get_allPlayers() != nullptr) {
+            team->get_allPlayers()->detach();
+        }
         delete team;
     }
     catch(const NodeNotFound& e) {
+        delete team;
         return StatusType::FAILURE;
     }
+    m_numTeams--;
 	return StatusType::SUCCESS;
 }
 
@@ -294,8 +300,11 @@ output_t<int> world_cup_t::get_team_points(int teamId) //Is this really the only
 
 output_t<int> world_cup_t::get_ith_pointless_ability(int i)
 {
-	// TODO: Your code goes here
-	return 12345;
+    if (i < 0 || m_numTeams == 0 || i >= m_numTeams) {
+        return output_t<int>(StatusType::FAILURE);
+    }
+    Team* team = m_teamsByAbility.find_index(m_teamsByAbility.m_node, i)->get_data();
+	return output_t<int>(team->get_teamID());
 }
 
 output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
@@ -323,7 +332,7 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
     return output_t<permutation_t>(playerSpirit);
 }
 
-StatusType world_cup_t::buy_team(int teamId1, int teamId2)
+StatusType world_cup_t::buy_team(int teamId1, int teamId2) //decrease num of teams if success
 {
 	// TODO: Your code goes here
 	return StatusType::SUCCESS;

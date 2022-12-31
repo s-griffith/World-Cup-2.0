@@ -103,21 +103,21 @@ public:
     * @return - none
     void get_all_data(int* const array) const;
 
-    /*
+    
      * Helper function for get_closest_player in world_cup:
      * Updates the closest player pointers of the given player
      * @param - PlayerID, goals, cards
      * @return - void
     void update_closest(const int teamId);
 
-    /*
+    
      * Helper function for unite_teams in world_cup:
      * Updates the number of games for each player in a given team
      * @param - the number of games played by the team
      * @return - void
     void unite_update_games(const int numTeamGames);
 
-    /*
+    
      * Helper function for unite_teams in world_cup:
      * Creates a tree from a given ordered array
      * @param - a pointer to the array and its final index

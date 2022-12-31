@@ -54,6 +54,8 @@ public:
 
     int getID() const;
 
+    T get_data() const;
+
 private:
 
     /*
@@ -184,6 +186,11 @@ int ComplexNode<T>::unite_insert(Player** players, int index) {
 template<class T>
 int ComplexNode<T>::getID() const {
     return this->m_id;
+}
+
+template<class T>
+T ComplexNode<T>::get_data() const {
+    return this->m_data;
 }
 
 //-----------------------------------------Rotations--------------------------------------------

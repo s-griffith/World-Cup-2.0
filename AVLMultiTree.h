@@ -214,7 +214,6 @@ void MultiTree<T>::insert(T data, const int id, const int ability) {
     }
     //Go back up the tree to update the number of nodes in each of the parents' subtrees:
     x = parent;
-    int rightChildren = 0, leftChildren = 0;
     while (x != nullptr) {
         x->update_children();
         x = x->m_parent;
