@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TESTS_TO_RUN=2
+TESTS_TO_RUN=27
 EXECUTABLE=./FileTester
 
 RED='\033[0;31m'
@@ -18,7 +18,7 @@ do
 	
 	printf "test $i >>>  "
 	$EXECUTABLE < $i > outFiles/test${i//[^0-9]/}.result
-	diff outFiles/output${i//[^0-9]/}.out outFiles/test${i//[^0-9]/}.result
+	diff outFilesDesired/output${i//[^0-9]/}.out outFiles/test${i//[^0-9]/}.result
 
 	if [ $? -eq 0 ]
 	then
@@ -52,4 +52,3 @@ if [ -z ${FAILED_TESTS} ]; then
 else
 	printf "\n${RED} Failed ${FAILED_TESTS}${NC} tests.\n\n"
 fi
-printf "incress TESTS_TO_RUN in tester.sh in order to run more tests (up to 500)\n"
