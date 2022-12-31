@@ -1,0 +1,109 @@
+Constructor:
+    - size is 7 constant at the beginning, so it's a loop on O(1)
+
+Destructor:
+    -current size is 2*number of players at max --> 2n
+    -erase_data goes over n nodes total
+    -erase_data for teams --> K
+
+Add_team:
+    -insert to AVL tree: O(logk)
+    -insert to MultiTree: O(logk)
+
+Remove_team:
+    -search: O(logk)
+    -Remove from AVL: O(logk)
+    -Remove from MultiTree: O(logk)
+
+Add_Player:
+    -check_player_exists:
+        -hash_function: O(1)
+        -search on hash function table: average of O(1) because generally only one player per tree
+    -search the team: O(logk)
+    -many O(1) movements
+    -partial spirit calculation:
+        -inv: O(5)
+        -* operator: O(5)
+        -total: O(1)
+    -create a player: O(1)
+    -enlarge_hash_table: 
+        -happens only when the number of players reaches the size of the hash table --> happens only once in a while
+        -average: use the עומס פקטור
+        -when it does happen (happens every n actions: for us every n new players added): 
+            -calculate_hash_size: O(logn)
+            -first for loop: O(n)
+            -second for loop: O(n)
+            -destroy_old_hash_table: O(n)
+            -Total: O(n+logn) = O(n) -> averge complexity for n actions: n/n=O(1)
+    -insert_player_hash_table: 
+        -hash_function: O(1)
+        -insert: on average, the player is inserted into an empty tree --> O(1) because the insertion is directly into the root
+        -total: average is O(1)
+    -remove from MultiTree: O(logk)
+    -insert to MultiTree: O(logk)
+    -Total average complexity: O(logk)
+
+Play_Match:
+    -search_and_return_data: O(logk)
+    -Many O(1)
+    -strength:O(1)
+    -Total: O(logk)
+
+num_played_games_for_player:
+    -hash_function: O(1)
+    -search_and_return_data: O(1) on average
+    -find: average O(log*n)
+    -things with numGames --> O(1)
+    -Total: average on input O(log*n)
+
+add_player_cards:
+    -check_player_kicked_out:
+        - hash_function = O(1)
+        - search_and_return_data: O(1) on average
+        - find() - average O(log*n)
+        - More O(1) actions
+    - hash_function = O(1)
+    - search_and_return_data: O(1) on average
+    - More O(1) actions
+    - Total: O(log*n)
+
+get_player_cards:
+    -hash_function: O(1)
+    -search_and_return_data: O(1) average on input
+    -return O(1)
+    Total: O(1) on average
+
+get_team_points:
+    -search_and_return_data: O(logk)
+    -return: O(1)
+    -Total: O(logk)
+
+get_ith_pointless_ability:
+    -find_index: O(logk)
+    -return: O(1)
+    -Total: O(logk)
+
+get_partial_spirit:
+    -check_player_kicked_out:
+        - hash_function = O(1)
+        - search_and_return_data: O(1) on average
+        - find() - average O(log*n)
+        - More O(1) actions
+    -search_and_return_data: O(1) on average
+    -find: average O(log*n)
+    -O(1) for calculating spirit
+    -Total: O(log*n) on average on input
+
+buy_team:
+    -search_and_return_data: O(logk)
+    -get_ability: O(1)
+    -O(1) calculations
+    -players_union: O(1)
+    -Movement of pointers: O(1)
+    -teams_unite: O(1)
+    -remove_team: O(logk)
+    -MultiTree remove: O(logk)
+    -MultiTree insert: O(logk)
+    -O(log*n) because taken into account along with rest of system functions (including find)
+    Total: O(log*n+logk)
+
