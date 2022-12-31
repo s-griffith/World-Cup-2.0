@@ -161,8 +161,8 @@ Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int othe
         //Change root of other team to current team's root
         otherTeam->m_parent = this;
         //Update partial spirit for team
-        otherTeam->m_partialSpirit = currentTeamSpirit * m_partialSpirit;
-        otherTeam->m_partialSpirit = m_parent->m_partialSpirit.inv() * otherTeam->m_partialSpirit;
+        otherTeam->m_partialSpirit = currentTeamSpirit * otherTeam->m_partialSpirit;
+        otherTeam->m_partialSpirit = otherTeam->m_parent->m_partialSpirit.inv() * otherTeam->m_partialSpirit;
         //Update games played of other team
         otherTeam->m_gamesPlayed -= m_gamesPlayed;
         //Return root of new player upside-down tree

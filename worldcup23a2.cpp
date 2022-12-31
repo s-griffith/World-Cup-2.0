@@ -10,7 +10,7 @@ world_cup_t::world_cup_t() :
     int currentSize = calculate_hash_size(m_currentHashIndex);
     m_playersHashTable = new Tree<GenericNode<Player*>, Player*>*[currentSize];
     for (int i = 0; i < currentSize; i++) {
-        m_playersHashTable[i] = nullptr;
+        m_playersHashTable[i] = new Tree<GenericNode<Player*>, Player*>();
     }
 }
 
@@ -30,6 +30,7 @@ world_cup_t::~world_cup_t()
     }
     delete[] m_playersHashTable;
 }
+
 
 StatusType world_cup_t::add_team(int teamId)
 {
