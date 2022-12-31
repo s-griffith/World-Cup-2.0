@@ -143,15 +143,6 @@ Player* Player::find_update_parents(Player* tmpPlayer)
 Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int otherNumPlayers, \
             permutation_t currentTeamSpirit, permutation_t otherTeamSpirit)
 {
-    //***Assumptions from buy_teams: **********************************************************************************
-    //rootPlayer1 games played += team1 games played
-    //rootPlayer2 games played += team2 games played
-    //newTeam games played = 0
-    //newTeam num players = team1 num players + team2 num players
-    //return player from this function is the new root - it's team pointer should be the new team
-    //return player from this function is the new root - the new team should point to it
-    //This function should only be called if team1 and team2 have at least one player each, otherwise play around with root according to who is empty
-
     //Nothing to unite!
     if (currentNumPlayers == 0 || otherNumPlayers == 0) {
         return nullptr;

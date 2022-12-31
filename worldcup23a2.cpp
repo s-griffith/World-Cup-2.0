@@ -4,12 +4,13 @@ world_cup_t::world_cup_t() :
     m_numTotalPlayers(0),
     m_numTeams(0),
     m_currentHashIndex(3),
+    m_currentHashSize(0),
     m_teamsByID(),
     m_teamsByAbility()
 {
-    int currentSize = calculate_hash_size(m_currentHashIndex);
-    m_playersHashTable = new Tree<GenericNode<Player*>, Player*>*[currentSize];
-    for (int i = 0; i < currentSize; i++) {
+    m_currentHashSize = calculate_hash_size(m_currentHashIndex);
+    m_playersHashTable = new Tree<GenericNode<Player*>, Player*>*[m_currentHashSize];
+    for (int i = 0; i < m_currentHashSize; i++) {
         m_playersHashTable[i] = new Tree<GenericNode<Player*>, Player*>();
     }
 }
@@ -17,8 +18,7 @@ world_cup_t::world_cup_t() :
 world_cup_t::~world_cup_t()
 {
     if (m_numTotalPlayers > 0) {
-        int currentSize = calculate_hash_size(m_currentHashIndex);
-        for (int i = 0; i < currentSize; i++) {
+        for (int i = 0; i < m_currentHashSize; i++) {
             if (m_playersHashTable[i] != nullptr) {
                 m_playersHashTable[i]->erase_data(m_playersHashTable[i]->m_node);
                 delete m_playersHashTable[i];
@@ -129,8 +129,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     catch (const std::bad_alloc& e) {
         return StatusType::ALLOCATION_ERROR;
     }
-    int current_size = calculate_hash_size(m_currentHashIndex);
-    if (m_numTotalPlayers + 1 == current_size) {
+    if (m_numTotalPlayers + 1 == m_currentHashSize) {
         try {
             enlarge_hash_table();
         }
@@ -138,7 +137,6 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
             delete tmpPlayer;
             return StatusType::ALLOCATION_ERROR;
         }
-        m_currentHashIndex++;
     }
     try {
         insert_player_hash_table(tmpPlayer);
@@ -147,9 +145,13 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         delete tmpPlayer;
         return StatusType::ALLOCATION_ERROR;
     }
+    catch (const InvalidID& e) {
+        delete tmpPlayer;
+        return StatusType::FAILURE;
+    }
     //If this is the first player in the team, update team pointer to it's players
     if (playerRoot == nullptr) {
-        tmpTeam->set_teamPlayers(tmpPlayer); //-------------------------------------------------------------------Add to teams
+        tmpTeam->set_teamPlayers(tmpPlayer);
     }
     //Remove the team from the tree sorted by player ability, and update the team's stats
     m_teamsByAbility.remove(tmpTeam->get_teamID(), tmpTeam->get_ability());
@@ -283,7 +285,7 @@ output_t<int> world_cup_t::get_player_cards(int playerId)
     return output_t<int>(tmpPlayer->get_cards());
 }
 
-output_t<int> world_cup_t::get_team_points(int teamId) //Is this really the only thing we need to do here? Am I missing something???
+output_t<int> world_cup_t::get_team_points(int teamId)
 {
     if (teamId <= 0) {
         return StatusType::INVALID_INPUT;
@@ -295,8 +297,7 @@ output_t<int> world_cup_t::get_team_points(int teamId) //Is this really the only
     catch (const NodeNotFound& e) {
         return output_t<int>(StatusType::FAILURE);
     }
-    int points = t->get_points();
-	return output_t<int>(points);
+	return output_t<int>(t->get_points());
 }
 
 output_t<int> world_cup_t::get_ith_pointless_ability(int i)
@@ -369,6 +370,7 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
     //Merge the internal fields of the two teams
     buyer->teams_unite(*bought);
     //Delete the bought team from the system:
+    bought->update_players(nullptr);
     remove_team(teamId2);
     //Fix the location of the united team in the teams by ability tree:
     m_teamsByAbility.remove(teamId1, prevAbility);
@@ -378,15 +380,13 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
     catch (std::bad_alloc&) {
         return StatusType::ALLOCATION_ERROR;
     }
-    //Decrease the total number of teams in the system:
-    m_numTeams--;
 	return StatusType::SUCCESS;
 }
 
 
 //-------------------------------------------Helper Functions----------------------------------------------
 
-bool world_cup_t::check_player_exists(int playerId)//**********************************************************May not need this in the end
+bool world_cup_t::check_player_exists(int playerId)
 {
     int arrayIndex = hash_function(playerId);
     try {
@@ -432,25 +432,25 @@ int world_cup_t::calculate_hash_size(int index)
 
 void world_cup_t::enlarge_hash_table()
 {
-    int currentSize = calculate_hash_size(m_currentHashIndex);
     int newSize = calculate_hash_size(m_currentHashIndex + 1);
     Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[newSize];
-    for (int i = 0; i < currentSize; i++) {
+    for (int i = 0; i < m_currentHashSize; i++) {
         newTable[i] = m_playersHashTable[i];
     }
-    for (int i = currentSize; i < newSize; i++) {
-        newTable[i] = nullptr;
+    for (int i = m_currentHashSize; i < newSize; i++) {
+        newTable[i] = new Tree<GenericNode<Player*>, Player*>();
     }
     Tree<GenericNode<Player*>, Player*>** tmpTable = m_playersHashTable;
     m_playersHashTable = newTable;
     destroy_old_hash_table(tmpTable);
+    m_currentHashSize = newSize;
+    m_currentHashIndex++;
 }
 
 
 void world_cup_t::destroy_old_hash_table(Tree<GenericNode<Player*>, Player*>** tmpTable)
 {
-    int currentSize = calculate_hash_size(m_currentHashIndex);
-    for (int i = 0; i < currentSize; i++) {
+    for (int i = 0; i < m_currentHashSize; i++) {
         tmpTable[i] = nullptr;
     }
     delete[] tmpTable;
@@ -460,19 +460,11 @@ void world_cup_t::destroy_old_hash_table(Tree<GenericNode<Player*>, Player*>** t
 void world_cup_t::insert_player_hash_table(Player* tmpPlayer)
 {
     int arrayIndex = hash_function(tmpPlayer->get_playerId());
-    try {
-        if (m_playersHashTable[arrayIndex] == nullptr) {
-            m_playersHashTable[arrayIndex] = new Tree<GenericNode<Player*>, Player*>();
-        }
-        m_playersHashTable[arrayIndex]->insert(tmpPlayer, tmpPlayer->get_playerId());
-    }
-    catch (const std::bad_alloc& e) {
-       throw e;
-    }
+    m_playersHashTable[arrayIndex]->insert(tmpPlayer, tmpPlayer->get_playerId());
 }
 
 
 int world_cup_t::hash_function(int id)
 {
-    return id % calculate_hash_size(m_currentHashIndex);
+    return id % m_currentHashSize;
 }

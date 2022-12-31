@@ -32,6 +32,8 @@ private:
     int m_numTeams;
     //Current hash index, used to calculate the hash table size
     int m_currentHashIndex;
+    //Current hash table size
+    int m_currentHashSize;
     //Hash table of AVL trees of players
     Tree<GenericNode<Player*>, Player*>** m_playersHashTable;
     //Tree of shared pointers of the type team, with all the teams in the game sorted by their ID

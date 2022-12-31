@@ -240,7 +240,7 @@ void MultiTree<T>::remove(const int id, const int ability) {
     ComplexNode<T>* x = toRemove->m_parent;
     ComplexNode<T>* nodeToFix = Tree<ComplexNode<T>, T>::make_node_leaf(toRemove);
     while (x != nullptr) {
-        x->m_numChildren--;
+        x->m_numChildren--; //Might need to use update_children()
         x = x->m_parent;
     }
     delete toRemove;

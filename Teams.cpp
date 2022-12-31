@@ -168,7 +168,7 @@ void Team::teams_unite(Team& bought) {
     m_numCards += bought.m_numCards;
     m_numGames = 0;
     m_totalAbility += bought.m_totalAbility;
-    m_teamSpirit = m_teamSpirit * bought.m_teamSpirit; //Is this correct?
+    m_teamSpirit = m_teamSpirit * bought.m_teamSpirit;
 }
 
 
