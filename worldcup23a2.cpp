@@ -15,13 +15,11 @@ world_cup_t::world_cup_t() :
 
 world_cup_t::~world_cup_t()
 {
-    if (m_numTotalPlayers > 0) {
-        for (int i = 0; i < m_currentHashSize; i++) {
-            if (m_playersHashTable[i] != nullptr) {
-                m_playersHashTable[i]->erase_data(m_playersHashTable[i]->m_node);
-                delete m_playersHashTable[i];
-            }
+    for (int i = 0; i < m_currentHashSize; i++) {
+        if (m_playersHashTable[i]->m_node->get_height() >= 0) {
+            m_playersHashTable[i]->erase_data(m_playersHashTable[i]->m_node);
         }
+        delete m_playersHashTable[i];
     }
     if (m_teamsByID.m_node->get_height() >= 0) {
         m_teamsByID.erase_data(m_teamsByID.m_node);
