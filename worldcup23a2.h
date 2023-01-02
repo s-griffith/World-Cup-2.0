@@ -23,6 +23,7 @@
 #include "AVLMultiTree.h"
 #include "ComplexNode.h"
 #include <memory.h>
+#include <iostream>
 
 class world_cup_t {
 private:

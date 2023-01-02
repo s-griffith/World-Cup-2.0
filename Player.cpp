@@ -3,7 +3,7 @@
 //--------------------------------Constructor and Destructor------------------------------------
 
 Player::Player(const int playerId, const int gamesPlayed, const int ability, const int cards, const bool goalKeeper,
-               const permutation_t& spirit, const permutation_t& partialSpirit, Team* tmpTeam, Player* parent) :
+               const permutation_t& spirit, const permutation_t& partialSpirit, Player* parent) :
     m_playerId(playerId),
     m_gamesPlayed(gamesPlayed),
     m_ability(ability),
@@ -11,7 +11,7 @@ Player::Player(const int playerId, const int gamesPlayed, const int ability, con
     m_goalkeeper(goalKeeper),
     m_spirit(spirit),
     m_partialSpirit(partialSpirit),
-    m_team(tmpTeam),
+    m_team(nullptr),
     m_parent(parent)
 {}
 
@@ -106,8 +106,9 @@ void Player::update_team(Team* tmpTeam)
 
 void Player::find()
 {
-    if (m_parent == nullptr || m_parent->m_parent == nullptr)
+    if (m_parent == nullptr || m_parent->m_parent == nullptr) {
         return;
+    }
     find_update_games(this);
     find_update_partial_spirit(this);
     find_update_parents(this);
@@ -134,7 +135,7 @@ permutation_t Player::find_update_partial_spirit(Player* tmpPlayer)
 Player* Player::find_update_parents(Player* tmpPlayer)
 {
     if (tmpPlayer->m_parent == nullptr) {
-        return this;
+        return tmpPlayer;
     }
     tmpPlayer->m_parent = find_update_parents(tmpPlayer->m_parent);
     return tmpPlayer->m_parent;
@@ -151,9 +152,10 @@ Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int othe
     if (currentNumPlayers >= otherNumPlayers) {
         //Change root of other team to current team's root
         otherTeam->m_parent = this;
+        otherTeam->m_team = nullptr;
         //Update partial spirit for team
         otherTeam->m_partialSpirit = currentTeamSpirit * otherTeam->m_partialSpirit;
-        otherTeam->m_partialSpirit = otherTeam->m_parent->m_partialSpirit.inv() * otherTeam->m_partialSpirit;
+        otherTeam->m_partialSpirit = m_partialSpirit.inv() * otherTeam->m_partialSpirit;
         //Update games played of other team
         otherTeam->m_gamesPlayed -= m_gamesPlayed;
         //Return root of new player upside-down tree
@@ -161,9 +163,10 @@ Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int othe
     }
     //Change root of current team to other team's root
     m_parent = otherTeam;
+    m_team = nullptr;
     //Update partial spirit for team
-    otherTeam->m_partialSpirit = currentTeamSpirit * m_partialSpirit;
-    m_partialSpirit = m_parent->m_partialSpirit.inv() * m_partialSpirit;
+    otherTeam->m_partialSpirit = currentTeamSpirit * otherTeam->m_partialSpirit;
+    m_partialSpirit = otherTeam->m_partialSpirit.inv() * m_partialSpirit;
     //Update games played of current team
     m_gamesPlayed -= m_parent->m_gamesPlayed;
     //Return root of new player upside-down tree

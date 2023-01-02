@@ -71,12 +71,12 @@ StatusType world_cup_t::remove_team(int teamId)
         m_teamsByID.remove(teamId);
         m_teamsByAbility.remove(teamId, team->get_ability());
         if (team->get_allPlayers() != nullptr) {
+            team->get_allPlayers()->update_gamesPlayed(team->get_games());
             team->get_allPlayers()->detach();
         }
         delete team;
     }
     catch(const NodeNotFound& e) {
-        delete team;
         return StatusType::FAILURE;
     }
     m_numTeams--;
@@ -110,7 +110,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         playerNumGames -= playerRoot->get_gamesPlayed();
     }
     //Add the player's partial spirit (it's team's spirit only including the players that joined before the current player)
-    permutation_t partialSpirit = tmpTeam->get_teamSpirit(); //-------------------------------------------------------------------Add to teams + make sure operator= works
+    permutation_t partialSpirit = tmpTeam->get_teamSpirit();
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
         //Inverse the root's spirit and add it to the player's partial spirit (it will be added back in the future)
@@ -123,7 +123,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     }
     Player* tmpPlayer;
     try {
-        tmpPlayer = new Player(playerId, gamesPlayed, ability, cards, goalKeeper, spirit, partialSpirit, tmpTeam, playerRoot);
+        tmpPlayer = new Player(playerId, playerNumGames, ability, cards, goalKeeper, spirit, partialSpirit, playerRoot);
     }
     catch (const std::bad_alloc& e) {
         return StatusType::ALLOCATION_ERROR;
@@ -150,6 +150,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     }
     //If this is the first player in the team, update team pointer to it's players
     if (playerRoot == nullptr) {
+        tmpPlayer->update_team(tmpTeam);
         tmpTeam->set_teamPlayers(tmpPlayer);
     }
     //Remove the team from the tree sorted by player ability, and update the team's stats
@@ -240,9 +241,12 @@ output_t<int> world_cup_t::num_played_games_for_player(int playerId)
     int gamesPlayed = tmpPlayer->get_gamesPlayed();
     //If player isn't the root of the team's players
     if (tmpPlayer->get_parent() != nullptr) {
-        gamesPlayed += tmpPlayer->get_parent()->get_gamesPlayed() + tmpPlayer->get_parent()->get_team()->get_games();
+        gamesPlayed += tmpPlayer->get_parent()->get_gamesPlayed();
+        if (tmpPlayer->get_parent()->get_team() != nullptr) {
+            gamesPlayed += tmpPlayer->get_parent()->get_team()->get_games();
+        }
     }
-    else {
+    else if (tmpPlayer->get_team() != nullptr) {
         gamesPlayed += tmpPlayer->get_team()->get_games();
     }
     return output_t<int>(gamesPlayed);
@@ -336,7 +340,7 @@ output_t<permutation_t> world_cup_t::get_partial_spirit(int playerId)
 StatusType world_cup_t::buy_team(int teamId1, int teamId2)
 {
     if (teamId1 <= 0 || teamId2 <= 0 || teamId1 == teamId2) {
-        return StatusType::FAILURE;
+        return StatusType::INVALID_INPUT;
     }
     Team* buyer;
     Team* bought;

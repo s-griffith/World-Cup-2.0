@@ -144,7 +144,12 @@ void Team::update_players(Player* player) {
 StatusType Team::add_player(Player* player, const int id, const permutation_t& spirit, const int ability, 
                                                                                 const int cards, const bool goalkeeper){
     update_num_cards(cards);
-    m_teamSpirit = m_teamSpirit * spirit;
+    if (m_numPlayers == 0) {
+        m_teamSpirit = spirit;
+    }
+    else {
+        m_teamSpirit = m_teamSpirit * spirit;
+    }
     m_totalAbility += ability;
     m_numPlayers++;
     if (goalkeeper) {
@@ -161,6 +166,12 @@ void Team::update_team_stats(const int goals, const int cards){
 
 
 void Team::teams_unite(Team& bought) {
+    if (m_numPlayers == 0) {
+        m_teamSpirit = bought.m_teamSpirit;
+    }
+    else if (bought.m_numPlayers != 0) {
+            m_teamSpirit = m_teamSpirit * bought.m_teamSpirit;
+    }
     m_points += bought.m_points;
     m_numPlayers += bought.m_numPlayers;
     m_numGoalkeepers += bought.m_numGoalkeepers;
@@ -168,7 +179,6 @@ void Team::teams_unite(Team& bought) {
     m_numCards += bought.m_numCards;
     m_numGames = 0;
     m_totalAbility += bought.m_totalAbility;
-    m_teamSpirit = m_teamSpirit * bought.m_teamSpirit;
 }
 
 

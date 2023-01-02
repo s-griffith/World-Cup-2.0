@@ -22,7 +22,7 @@ public:
     * @return - A new instance of Player.
     */
     Player(const int playerId, const int gamesPlayed, const int ability, const int cards, const bool goalKeeper,
-           const permutation_t& spirit, const permutation_t& partialSpirit, Team* tmpTeam, Player* parent);
+           const permutation_t& spirit, const permutation_t& partialSpirit, Player* parent);
 
     /*
     * Copy Constructor and Assignment Operator of Player class
