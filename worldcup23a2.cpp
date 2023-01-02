@@ -113,10 +113,10 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     permutation_t partialSpirit = tmpTeam->get_teamSpirit();
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
-        //Inverse the root's spirit and add it to the player's partial spirit (it will be added back in the future)
-        partialSpirit = playerRoot->get_spirit().inv() * partialSpirit;
         //Add the current player's spirit to its partial spirit
         partialSpirit = partialSpirit * spirit;
+        //Inverse the root's spirit and add it to the player's partial spirit (it will be added back in the future)
+        partialSpirit = playerRoot->get_partialSpirit().inv() * partialSpirit;
     }
     else {
         partialSpirit = spirit;
@@ -165,7 +165,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
         return StatusType::ALLOCATION_ERROR;
     }
     m_numTotalPlayers++;
-	return StatusType::SUCCESS;
+    return StatusType::SUCCESS;
 }
 
 output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
