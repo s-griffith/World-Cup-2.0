@@ -52,6 +52,8 @@ public:
      */
     void remove(const int id, const int ability);
 
+    ComplexNode<T>* make_node_leaf(ComplexNode<T>* node);
+
     /*
      * Search for max node by going down the right side of the tree
      * @param - none
@@ -232,22 +234,134 @@ void MultiTree<T>::remove(const int id, const int ability) {
         this->m_node->m_bf = 0;
         this->m_node->m_id = 0;
         this->m_node->m_ability = 0;
-       // this->m_node->m_index = -1;
         this->m_node->m_numChildren = 0;
         return;
     }
     ComplexNode<T>* toRemove = &(search_specific_id(id, ability));
-    ComplexNode<T>* x = toRemove->m_parent;
-    ComplexNode<T>* nodeToFix = Tree<ComplexNode<T>, T>::make_node_leaf(toRemove);
-    while (x != nullptr) {
-        x->m_numChildren--; //Might need to use update_children()
-        x = x->m_parent;
-    }
+    ComplexNode<T>* nodeToFix = make_node_leaf(toRemove);
     delete toRemove;
     //Go up the tree and check the balance factors and complete needed rotations
     Tree<ComplexNode<T>, T>::rebalance_tree(nodeToFix);
-    this->m_node->update_children();
 }
+
+template <class T>
+ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
+{
+    //Node to be deleted is already a leaf
+    if (node->m_left == nullptr && node->m_right == nullptr) {
+        if(node->m_parent != nullptr) {
+            if (node->m_parent->m_right == node) {
+                node->m_parent->m_right = nullptr;
+            }
+            else {
+                node->m_parent->m_left = nullptr;
+            }
+        }
+        node->m_numChildren = 0;
+        ComplexNode<T>* tmp = node->m_parent;
+        while (tmp != nullptr) {
+            tmp->update_children();
+            tmp = tmp->m_parent;
+        }
+        return node->m_parent;
+    }
+    //Node to be deleted has one child
+    if (node->m_left == nullptr || node->m_right == nullptr) {
+        ComplexNode<T>* tmpChild;
+        if (node->m_left != nullptr) {
+            tmpChild = node->m_left;
+        }
+        else {
+            tmpChild = node->m_right;
+        }
+        ComplexNode<T>* tmp = tmpChild;
+        //Connect child to parent
+        tmpChild->m_parent = node->m_parent;
+        node->m_numChildren = 0;
+        if (node->m_parent != nullptr) {
+            if (node->m_parent->m_left == node) {
+                node->m_parent->m_left = tmpChild;
+            }
+            else {
+                node->m_parent->m_right = tmpChild;
+            }
+            while (tmp != nullptr) {
+                tmp->update_children();
+                tmp = tmp->m_parent;
+            }
+        }
+        else {
+            this->m_node = tmpChild;
+            while (tmp != nullptr) {
+                tmp->update_children();
+                tmp = tmp->m_parent;
+            }
+            return this->m_node;
+        }
+        return node->m_parent;
+    }
+    //Node to be deleted has two children
+    ComplexNode<T>* successor = node->m_right;
+    ComplexNode<T>* temp = node->m_parent;
+    while (successor->m_left != nullptr) {
+        successor = successor->m_left;
+    }
+    ComplexNode<T>* parentToReturn;
+    if (successor != node->m_right) {
+        parentToReturn = successor->m_parent;
+    }
+    else {
+        parentToReturn = successor;
+    }
+    if (successor->m_right == nullptr) {
+        if (successor->m_parent->m_right == successor) {
+            successor->m_parent->m_right = nullptr;
+        }
+        else {
+            successor->m_parent->m_left = nullptr;
+        }
+    }
+    else if (node->m_right != successor) {
+        successor->m_right->m_parent = successor->m_parent;
+        if (successor->m_parent->m_right == successor) {
+            successor->m_parent->m_right = successor->m_right;
+        }
+        else {
+            successor->m_parent->m_left = successor->m_right;
+        }
+    }
+    temp = parentToReturn;
+    //Switch between successor and current node
+    successor->m_parent = node->m_parent;
+    if (node->m_parent != nullptr) {
+        if (node->m_parent->m_right == node) {
+            node->m_parent->m_right = successor;
+        }
+        else {
+            node->m_parent->m_left = successor;
+        }
+    }
+    else {
+        this->m_node = successor;
+    }
+    successor->m_left = node->m_left;
+    if (node->m_left != nullptr) {
+        node->m_left->m_parent = successor;
+    }
+    if (successor != node->m_right) {
+        successor->m_right = node->m_right;
+        if (node->m_right != nullptr) {
+            node->m_right->m_parent = successor;
+        }
+    }
+    node->m_numChildren = 0;
+    while (temp != nullptr) {
+        temp->update_children();
+        temp = temp->m_parent;
+    }
+    return parentToReturn;
+}
+
 
 
 //-----------------------------------------Search Functions-----------------------------------------
