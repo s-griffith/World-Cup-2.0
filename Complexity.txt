@@ -28,9 +28,15 @@ Add_Player:
     -create a player: O(1)
     -enlarge_hash_table: 
         -happens only when the number of players reaches the size of the hash table --> happens only once in a while
-        -average: use the עומס פקטור
-        -when it does happen (happens every n actions: for us every n new players added): 
+        -תחת הנחת הפיזור האחיד: amortized time complexity is O(1)
+        -פקטור העומס: size of hash table: m, number of terms in the hash table: n, where n=O(m) --> alpha = O(1)
+        -So the average number of terms inserted to each cell of the hash table is alpha = O(1)
+        -So the amortized time is O(1)
+        -More info: slides 5, 11 of Barak's Tirgul 8 and slides 10, 11 of Roee's Lecture 7
+        -when it does happen (happens every n inserts): 
+         ********UPDATE THESE STEPS
             -calculate the new hash size: O(1)
+            -get data inorder: O(n)
             -first for loop: O(n)
             -second for loop: O(n)
             -destroy_old_hash_table: O(n)
