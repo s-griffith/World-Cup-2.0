@@ -1,9 +1,10 @@
 #include <iostream>
 #include "AVLMultiTree.h"
-#include "Teams.h"
+#include "Teams.cpp"
+#include "worldcup23a2.cpp"
 
 int main() {
-    MultiTree<Team*> t1;
+/*    MultiTree<Team*> t1;
     Team* team5 = new Team(5);
     Team* team6 = new Team(6);
     t1.insert(team5, 5, 0);
@@ -56,6 +57,76 @@ int main() {
         }
         std::cout << "Index " << i << " is " << ID << std::endl;
     }
+    std::cout << "end print\n"; */
+
+    MultiTree<Team*> t3;
+    Team* team1 = new Team(1);
+    t3.insert(team1, 1, 1);
+    Team* team2 = new Team(2);
+    t3.insert(team2, 2, 1);
+    Team* team3 = new Team(3);
+    t3.print_tree();
     std::cout << "end print\n";
+    t3.insert(team3, 3, 1);
+    Team* team4 = new Team(4);
+    t3.insert(team4, 4, 1);
+    Team* team5 = new Team(5);
+    t3.insert(team5, 5, 1);
+    t3.print_tree();
+    std::cout << "end print\n";
+    Team* team6 = new Team(6);
+    t3.insert(team6, 6, 1);
+    Team* team7 = new Team(7);
+    t3.insert(team7, 7, 1);
+    Team* team8 = new Team(8);
+    t3.print_tree();
+    std::cout << "end print\n";
+    t3.insert(team8, 8, 1);
+    Team* team9 = new Team(9);
+    t3.insert(team9, 9, 1);
+    t3.print_tree();
+    std::cout << "end print\n";
+    for(int i = 0; i <9; i++)
+    {
+        ComplexNode<Team*>* team = t3.find_index(t3.m_node, i);
+        int ID;
+        if (team == nullptr) {
+            ID = -1;
+        }
+        else {
+            ID = team->getID();
+        }
+        std::cout << "Index " << i << " is " << ID << std::endl;
+    }
+    std::cout << "end print\n";
+    t3.remove(7, 1);
+    for(int i = 0; i <8; i++)
+    {
+        ComplexNode<Team*>* team = t3.find_index(t3.m_node, i);
+        int ID;
+        if (team == nullptr) {
+            ID = -1;
+        }
+        else {
+            ID = team->getID();
+        }
+        std::cout << "Index " << i << " is " << ID << std::endl;
+    }
+    std::cout << "end print\n";
+    t3.remove(4, 1);
+    for(int i = 0; i <7; i++)
+    {
+        ComplexNode<Team*>* team = t3.find_index(t3.m_node, i);
+        int ID;
+        if (team == nullptr) {
+            ID = -1;
+        }
+        else {
+            ID = team->getID();
+        }
+        std::cout << "Index " << i << " is " << ID << std::endl;
+    } 
+
+
     return 0;
 }
