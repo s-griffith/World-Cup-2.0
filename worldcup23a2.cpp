@@ -366,10 +366,13 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
         buyer->update_players(root);
     }
     else if (buyer->get_allPlayers() == nullptr && bought->get_allPlayers() != nullptr) {
+        bought->get_allPlayers()->update_gamesPlayed(bought->get_games());
         buyer->update_players(bought->get_allPlayers());
         bought->get_allPlayers()->update_team(buyer);
     }
-    //If buyer has players and bought is empty, there is nothing to do!
+    else if (buyer->get_allPlayers() != nullptr && bought->get_allPlayers() == nullptr) {
+        buyer->get_allPlayers()->update_gamesPlayed(buyer->get_games());
+    }
     //Merge the internal fields of the two teams
     buyer->teams_unite(*bought);
     //Delete the bought team from the system:
