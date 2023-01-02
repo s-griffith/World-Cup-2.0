@@ -3,7 +3,6 @@
 world_cup_t::world_cup_t() :
     m_numTotalPlayers(0),
     m_numTeams(0),
-    m_currentHashIndex(3),
     m_currentHashSize(7),
     m_teamsByID(),
     m_teamsByAbility()
@@ -430,24 +429,41 @@ void world_cup_t::enlarge_hash_table()
 {
     int newSize = ((m_currentHashSize + 1 ) * 2 ) - 1;
     Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[newSize];
+    for (int i = 0; i < newSize; i++) {
+        try {
+            newTable[i] = new Tree<GenericNode<Player*>, Player*>();
+        }
+        catch (const std::bad_alloc& e) {
+            delete[] newTable;
+            throw e;
+        }
+    }
+    int arrayIndex = 0;
+    Player** all_players = new Player*[m_currentHashSize];
     for (int i = 0; i < m_currentHashSize; i++) {
-        newTable[i] = m_playersHashTable[i];
+        all_players[i] = nullptr;
     }
-    for (int i = m_currentHashSize; i < newSize; i++) {
-        newTable[i] = new Tree<GenericNode<Player*>, Player*>();
+    Player** tmpPlayers = all_players;
+    for (int i = 0; i < m_currentHashSize; i++) {
+        m_playersHashTable[i]->get_all_data(all_players);
+        while (*all_players != nullptr) {
+            arrayIndex = (*all_players)->get_playerId() % newSize;
+            newTable[arrayIndex]->insert(*all_players, (*all_players)->get_playerId());
+            all_players++;
+        }
     }
+    delete[] tmpPlayers;
     Tree<GenericNode<Player*>, Player*>** tmpTable = m_playersHashTable;
     m_playersHashTable = newTable;
     destroy_old_hash_table(tmpTable);
     m_currentHashSize = newSize;
-    m_currentHashIndex++;
 }
 
 
 void world_cup_t::destroy_old_hash_table(Tree<GenericNode<Player*>, Player*>** tmpTable)
 {
     for (int i = 0; i < m_currentHashSize; i++) {
-        tmpTable[i] = nullptr;
+        delete tmpTable[i];
     }
     delete[] tmpTable;
 }

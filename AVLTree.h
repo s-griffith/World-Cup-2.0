@@ -95,6 +95,13 @@ public:
      */
     virtual T& search_and_return_data(const int id) const;
 
+    /*
+    * Get all players in tree - recursive function
+    * @param - array of Players
+    * @return - none.
+    */
+    void get_all_data(T* const array) const;
+
     //--------------------------------------------------------------------------------Delete if not needed
     /*
     * Helper function for get_all_players in world_cup:
@@ -547,6 +554,14 @@ N* Tree<N, T>::make_node_leaf(N* node)
         }
     }
     return parentToReturn;
+}
+
+template <class N, class T>
+void Tree<N, T>::get_all_data(T* const array) const
+{
+    if (this != nullptr) {
+        this->m_node->get_data_inorder(array, 0);
+    }
 }
 
 //--------------------------------------------------------------------------------Delete if not needed

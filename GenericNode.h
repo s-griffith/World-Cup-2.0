@@ -128,6 +128,13 @@ private:
     */
     void update_height();
 
+    /*
+    * Get all players in tree - recursive function
+    * @param - array of Players, integer of the current index in the array
+    * @return - current index in the array.
+    */
+    int get_data_inorder(T* array, int index) const;
+
     //--------------------------------------------------------------------------------Delete if not needed
     /*
      * Helper function for knockout in world_cup:
@@ -347,6 +354,18 @@ void GenericNode<T>::update_height()
     else {
         this->m_height = heightRight;
     }
+}
+
+
+template <class T>
+int GenericNode<T>::get_data_inorder(T* array, int index) const
+{
+    if (this != nullptr) {
+        index = m_left->get_data_inorder(array, index);
+        array[index++] = this->m_data;
+        index = m_right->get_data_inorder(array, index);
+    }
+    return index;
 }
 
 //--------------------------------------------------------------------------------Delete if not needed

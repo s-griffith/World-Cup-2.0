@@ -31,8 +31,6 @@ private:
     int m_numTotalPlayers;
     //Total number of teams in the world cup
     int m_numTeams;
-    //Current hash index, used to calculate the hash table size
-    int m_currentHashIndex;
     //Current hash table size
     int m_currentHashSize;
     //Hash table of AVL trees of players
