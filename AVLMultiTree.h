@@ -59,7 +59,7 @@ public:
      * @param - none
      * @return - the data of the max node
      */
-    T& search_and_return_max();
+    //T& search_and_return_max();
     
     /*
      * Search for a specific node, according to the id, goals, and cards given
@@ -88,7 +88,7 @@ public:
      * @param - an array
      * @return - void
      */
-    void get_all_data(int* const array) const;
+    //void get_all_data(int* const array) const;
 
     /*
      * Helper function for get_closest_player in world_cup:
@@ -96,7 +96,7 @@ public:
      * @param - PlayerID, goals, cards
      * @return - void
      */
-    void update_closest(const int playerId, const int goals, const int cards);
+    //void update_closest(const int playerId, const int goals, const int cards);
 
     ComplexNode<T>* find_index(ComplexNode<T>* node, const int index);
 
@@ -106,7 +106,7 @@ public:
      * @param - a pointer to the array and its final index
      * @return - void
      */
-    void insertInorder(T* data, const int end);
+    //void insertInorder(T* data, const int end);
 
     /*
      * Helper function for testing:
@@ -124,7 +124,7 @@ private:
      * @param - a pointer to the array, its starting index, and its final index
      * @return - a pointer to the root node at the end of the insertions
      */
-    ComplexNode<T>* insertInorderRecursive(T* data, const int start, const int end);
+   // ComplexNode<T>* insertInorderRecursive(T* data, const int start, const int end);
 
     /*
      * Helper functions for update_closest:
@@ -134,6 +134,14 @@ private:
      */
     typename ComplexNode<T>::ComplexNode* findLeftClosest(ComplexNode<T>* currentPlayerNode);
     typename ComplexNode<T>::ComplexNode* findRightClosest(ComplexNode<T>* currentPlayerNode);
+
+    /*
+    * Helper function for updating the rank during remove:
+    * Starts at a given node and goes up until reaching the root, updating the number of children for each node
+    * @param - ComplexNode* of the node to start the update at
+    * @return - void
+    */
+    void upwardUpdate(ComplexNode<T>* starting);
 };
 
 
@@ -215,11 +223,7 @@ void MultiTree<T>::insert(T data, const int id, const int ability) {
         parent->m_right = node;
     }
     //Go back up the tree to update the number of nodes in each of the parents' subtrees:
-    x = parent;
-    while (x != nullptr) {
-        x->update_children();
-        x = x->m_parent;
-    }
+    upwardUpdate(parent);
     this->rebalance_tree(node->m_parent);
     this->m_node->update_children();
 }
@@ -247,6 +251,7 @@ void MultiTree<T>::remove(const int id, const int ability) {
 template <class T>
 ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
 {
+    ComplexNode<T>* toUpdate = node->m_parent;
     //Node to be deleted is already a leaf
     if (node->m_left == nullptr && node->m_right == nullptr) {
         if(node->m_parent != nullptr) {
@@ -258,11 +263,7 @@ ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
             }
         }
         node->m_numChildren = 0;
-        ComplexNode<T>* tmp = node->m_parent;
-        while (tmp != nullptr) {
-            tmp->update_children();
-            tmp = tmp->m_parent;
-        }
+        upwardUpdate(toUpdate);
         return node->m_parent;
     }
     //Node to be deleted has one child
@@ -274,7 +275,7 @@ ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
         else {
             tmpChild = node->m_right;
         }
-        ComplexNode<T>* tmp = tmpChild;
+        toUpdate = tmpChild;
         //Connect child to parent
         tmpChild->m_parent = node->m_parent;
         node->m_numChildren = 0;
@@ -285,24 +286,17 @@ ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
             else {
                 node->m_parent->m_right = tmpChild;
             }
-            while (tmp != nullptr) {
-                tmp->update_children();
-                tmp = tmp->m_parent;
-            }
+            upwardUpdate(toUpdate);
         }
         else {
             this->m_node = tmpChild;
-            while (tmp != nullptr) {
-                tmp->update_children();
-                tmp = tmp->m_parent;
-            }
+            upwardUpdate(toUpdate);
             return this->m_node;
         }
         return node->m_parent;
     }
     //Node to be deleted has two children
     ComplexNode<T>* successor = node->m_right;
-    ComplexNode<T>* temp = node->m_parent;
     while (successor->m_left != nullptr) {
         successor = successor->m_left;
     }
@@ -330,7 +324,7 @@ ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
             successor->m_parent->m_left = successor->m_right;
         }
     }
-    temp = parentToReturn;
+    toUpdate = parentToReturn;
     //Switch between successor and current node
     successor->m_parent = node->m_parent;
     if (node->m_parent != nullptr) {
@@ -355,10 +349,7 @@ ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
         }
     }
     node->m_numChildren = 0;
-    while (temp != nullptr) {
-        temp->update_children();
-        temp = temp->m_parent;
-    }
+    upwardUpdate(toUpdate);
     return parentToReturn;
 }
 
@@ -366,14 +357,14 @@ ComplexNode<T>* MultiTree<T>::make_node_leaf(ComplexNode<T>* node)
 
 //-----------------------------------------Search Functions-----------------------------------------
 
-template<class T>
+/*template<class T>
 T& MultiTree<T>::search_and_return_max() {
     ComplexNode<T>* node = this->m_node;
     while(node->m_right != nullptr) {
         node = node->m_right;
     }
     return node->m_data;
-}
+}*/
 
 
 template<class T>
@@ -408,37 +399,13 @@ ComplexNode<T>& MultiTree<T>::search_recursively(const int id, const int ability
 
 //-----------------------------------------Helper Functions for world_cup-----------------------------------------
 
-template <class T>
+/*template <class T>
 void MultiTree<T>::get_all_data(int* const array) const
 {
     if (this != nullptr) {
         this->m_node->get_data_inorder(array, 0);
     }
-}
-
-
-template<class T>
-void MultiTree<T>::update_closest(const int playerId, const int goals, const int cards)
-{
-    //Search for specific node
-    typename ComplexNode<T>::ComplexNode* currentPlayer = &(this->search_specific_id(playerId, goals, cards));
-    //Get closest node to the left of the other tree node
-    typename ComplexNode<T>::ComplexNode* closestLeft = findLeftClosest(currentPlayer);
-    if (closestLeft != nullptr) {
-        currentPlayer->m_data->update_closest_left(closestLeft->m_data);
-    }
-    else {
-        currentPlayer->m_data->update_closest_left(nullptr);
-    }
-    //Get closest node to the right of the other tree node
-    typename ComplexNode<T>::ComplexNode* closestRight = findRightClosest(currentPlayer);
-    if (closestRight != nullptr) {
-        currentPlayer->m_data->update_closest_right(closestRight->m_data);
-    }
-    else {
-        currentPlayer->m_data->update_closest_right(nullptr);
-    }
-}
+}*/
 
 template <class T>
 ComplexNode<T>* MultiTree<T>::find_index(ComplexNode<T>* node, const int index) {
@@ -462,69 +429,8 @@ ComplexNode<T>* MultiTree<T>::find_index(ComplexNode<T>* node, const int index) 
     }
 }
 
-template <class T>
-typename ComplexNode<T>::ComplexNode* MultiTree<T>::findLeftClosest(ComplexNode<T>* currentPlayerNode)
-{
-    typename ComplexNode<T>::ComplexNode* closestLeft = currentPlayerNode;
-    if (closestLeft->m_left != nullptr) {
-        closestLeft = closestLeft->m_left;
-        while (closestLeft->m_right != nullptr) {
-            closestLeft = closestLeft->m_right;
-        }
-    }
-    else if ((currentPlayerNode->m_parent != nullptr) && (currentPlayerNode->m_parent->m_right == currentPlayerNode)) {
-        closestLeft = currentPlayerNode->m_parent;
-    }
-    else if (currentPlayerNode->m_parent != nullptr) {
-        while (closestLeft->m_parent != nullptr && closestLeft->m_parent->m_left == closestLeft) {
-            closestLeft = closestLeft->m_parent;
-        }
-        if (closestLeft->m_parent == nullptr) {
-            closestLeft = nullptr;
-        }
-        else {
-            closestLeft = closestLeft->m_parent;
-        }
-    }
-    if ((closestLeft != nullptr) && (closestLeft->m_id != currentPlayerNode->m_id)) {
-        return closestLeft;
-    }
-    return nullptr;
-}
 
-
-template <class T>
-typename ComplexNode<T>::ComplexNode* MultiTree<T>::findRightClosest(ComplexNode<T>* currentPlayerNode)
-{
-    typename ComplexNode<T>::ComplexNode* closestRight = currentPlayerNode;
-    if (closestRight->m_right != nullptr) {
-        closestRight = closestRight->m_right;
-        while (closestRight->m_left != nullptr) {
-            closestRight = closestRight->m_left;
-        }
-    }
-    else if ((currentPlayerNode->m_parent != nullptr) && (currentPlayerNode->m_parent->m_left == currentPlayerNode)) {
-        closestRight = currentPlayerNode->m_parent;
-    }
-    else if (currentPlayerNode->m_parent != nullptr) {
-        while (closestRight->m_parent != nullptr && closestRight->m_parent->m_right == closestRight) {
-            closestRight = closestRight->m_parent;
-        }
-        if (closestRight->m_parent == nullptr) {
-            closestRight = nullptr;
-        }
-        else {
-            closestRight = closestRight->m_parent;
-        }
-    }
-    if ((closestRight != nullptr) && (closestRight->m_id != currentPlayerNode->m_id)) {
-        return closestRight;
-    }
-    return nullptr;
-}
-
-
-template <class T>
+/*template <class T>
 void MultiTree<T>::insertInorder(T* data, const int end) {
     ComplexNode<T>* tmp = this->m_node;
     this->m_node = insertInorderRecursive(data, 0, end);
@@ -552,6 +458,14 @@ ComplexNode<T>* MultiTree<T>::insertInorderRecursive(T* data, const int start, c
     root->update_bf();
     root->update_height();
     return root;
+}*/
+
+template<class T>
+void MultiTree<T>::upwardUpdate(ComplexNode<T>* starting) {
+    while (starting != nullptr) {
+        starting->update_children();
+        starting = starting->m_parent;
+    }
 }
 
 template<class T>

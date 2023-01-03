@@ -102,49 +102,7 @@ public:
     */
     void get_all_data(T* const array) const;
 
-    //--------------------------------------------------------------------------------Delete if not needed
-    /*
-    * Helper function for get_all_players in world_cup:
-    * Add all of the tree keys to the given array
-    * @param - an array
-    * @return - none
-    void get_all_data(int* const array) const;
-
-    
-     * Helper function for get_closest_player in world_cup:
-     * Updates the closest player pointers of the given player
-     * @param - PlayerID, goals, cards
-     * @return - void
-    void update_closest(const int teamId);
-
-    
-     * Helper function for unite_teams in world_cup:
-     * Updates the number of games for each player in a given team
-     * @param - the number of games played by the team
-     * @return - void
-    void unite_update_games(const int numTeamGames);
-
-    
-     * Helper function for unite_teams in world_cup:
-     * Creates a tree from a given ordered array
-     * @param - a pointer to the array and its final index
-     * @return - void
-    void insertInorder(T* data, const int end);
-     */
-    //--------------------------------------------------------------------------------
-
-
 protected:
-
-    //--------------------------------------------------------------------------------Delete if not needed
-    /*
-     * Helper function for unite_teams in world_cup:
-     * Recursively inserts the data from the array into a tree
-     * @param - a pointer to the array, its starting index, and its final index
-     * @return - a pointer to the root node at the end of the insertions
-    N* insertInorderRecursive(T* data, const int start, const int end);
-    */
-    //--------------------------------------------------------------------------------
 
     /*
     * Make the node a leaf without breaking the sorted tree
@@ -152,19 +110,6 @@ protected:
     * @return - a pointer to the node from which the tree is no longer balanced
     */
     N* make_node_leaf(N* node);
-
-private:
-
-    //--------------------------------------------------------------------------------Delete if not needed
-    /*
-     * Helper functions for update_closest:
-     * Finds the right and left closest players
-     * @param - Node (N) of the current player
-     * @return - Node (N) of the closest player
-    N* findLeftClosest(N* currentTeam);
-    N* findRightClosest(N* currentTeam);
-    */
-    //--------------------------------------------------------------------------------
 
 };
 
@@ -382,82 +327,6 @@ T& Tree<N, T>::search_and_return_data(const int id) const
     return tmpNode->m_data;
 }
 
-//--------------------------------------------------------------------------------Delete if not needed
-/*
-//-----------------------------------------Helper Functions for world_cup-----------------------------------------
-
-template <class N, class T>
-void Tree<N, T>::get_all_data(int* const array) const
-{
-    if (this != nullptr) {
-        m_node->get_data_inorder(array, 0);
-    }
-}
-
-
-template<class N, class T>
-void Tree<N, T>::update_closest(const int teamId)
-{
-    //Search for specific node
-    N* currentTeam = &(this->search_specific_id(teamId));
-    //Get closest node to the left of the other tree node
-    N* closestLeft = findLeftClosest(currentTeam);
-    if (closestLeft != nullptr) {
-        currentTeam->m_data->update_closest_left(closestLeft->m_data);
-    }
-    else {
-        currentTeam->m_data->update_closest_left(nullptr);
-    }
-    //Get closest node to the right of the other tree node
-    N* closestRight = findRightClosest(currentTeam);
-    if (closestRight != nullptr) {
-        currentTeam->m_data->update_closest_right(closestRight->m_data);
-    }
-    else {
-        currentTeam->m_data->update_closest_right(nullptr);
-    }
-}
-
-
-template<class N, class T>
-void Tree<N, T>::unite_update_games(const int numTeamGames) {
-    m_node->update_games_inorder(numTeamGames);
-}
-
-
-template<class N, class T>
-void Tree<N, T>::insertInorder(T* data, const int end) {
-    N* tmp = this->m_node;
-    m_node = insertInorderRecursive(data, 0, end);
-    delete tmp;
-}
-
-
-template<class N, class T>
-N* Tree<N, T>::insertInorderRecursive(T* data, const int start, const int end) {
-    //Stop recursion
-    if (start > end)
-        return nullptr;
-    //Get the middle player and make root
-    int mid = (start + end)/2;
-    N* root = new N(data[mid]);
-    //Construct left subtree
-    root->m_left =  insertInorderRecursive(data, start, mid-1);
-    if (root->m_left != nullptr) {
-        root->m_left->m_parent = root;
-    }
-    //Construct right subtree
-    root->m_right = insertInorderRecursive(data, mid+1, end);
-    if (root->m_right != nullptr) {
-        root->m_right->m_parent = root;
-    }
-    root->update_bf();
-    root->update_height();
-    return root;
-}
-*/
-//--------------------------------------------------------------------------------
-
 
 //-----------------------------------------Internal Helper Functions-----------------------------------------
 
@@ -564,69 +433,6 @@ void Tree<N, T>::get_all_data(T* const array) const
     }
 }
 
-//--------------------------------------------------------------------------------Delete if not needed
-/*
-template<class N, class T>
-N* Tree<N, T>::findLeftClosest(N* currentTeam)
-{
-    N* closestLeft = currentTeam;
-    if (currentTeam->m_left != nullptr) {
-        closestLeft = currentTeam->m_left;
-        while (closestLeft->m_right != nullptr) {
-            closestLeft = closestLeft->m_right;
-        }
-    }
-    else if ((currentTeam->m_parent != nullptr) && (currentTeam->m_parent->m_right == currentTeam)) {
-        closestLeft = currentTeam->m_parent;
-    }
-    else if (currentTeam->m_parent != nullptr) {
-        while (closestLeft->m_parent != nullptr && closestLeft->m_parent->m_left == closestLeft) {
-            closestLeft = closestLeft->m_parent;
-        }
-        if (closestLeft->m_parent == nullptr) {
-            closestLeft = nullptr;
-        }
-        else {
-            closestLeft = closestLeft->m_parent;
-        }
-    }
-    if ((closestLeft != nullptr) && (closestLeft->m_id != currentTeam->m_id)) {
-        return closestLeft;
-    }
-    return nullptr;
-}
-
-
-template<class N, class T>
-N* Tree<N, T>::findRightClosest(N* currentTeam)
-{
-    N* closestRight = currentTeam;
-    if (currentTeam->m_right != nullptr) {
-        closestRight = currentTeam->m_right;
-        while (closestRight->m_left != nullptr) {
-            closestRight = closestRight->m_left;
-        }
-    }
-    else if ((currentTeam->m_parent != nullptr) && (currentTeam->m_parent->m_left == currentTeam)) {
-        closestRight = currentTeam->m_parent;
-    }
-    else if (currentTeam->m_parent != nullptr) {
-        while (closestRight->m_parent != nullptr && closestRight->m_parent->m_right == closestRight) {
-            closestRight = closestRight->m_parent;
-        }
-        if (closestRight->m_parent == nullptr) {
-            closestRight = nullptr;
-        }
-        else {
-            closestRight = closestRight->m_parent;
-        }
-    }
-    if ((closestRight != nullptr) && (closestRight->m_id != currentTeam->m_id)) {
-        return closestRight;
-    }
-    return nullptr;
-}
-8*/
 
 //----------------------------------------------------------------------------------------------
 

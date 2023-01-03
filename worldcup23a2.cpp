@@ -49,6 +49,10 @@ StatusType world_cup_t::add_team(int teamId)
     try {
         m_teamsByAbility.insert(newTeam, teamId, 0);
     }
+    catch(const std::bad_alloc& e) {
+        delete newTeam;
+        return StatusType::ALLOCATION_ERROR;
+    }
     catch(const InvalidID& e) {
         delete newTeam;
         return StatusType::FAILURE;

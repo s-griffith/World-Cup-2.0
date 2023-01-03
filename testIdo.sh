@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TESTS_TO_RUN=27
+TESTS_TO_RUN=1001
 EXECUTABLE=./FileTester
 
 RED='\033[0;31m'
@@ -19,8 +19,8 @@ do
 	fi
 	
 	printf "test $i >>>  "
-	$EXECUTABLE < $i > realOut${i//[^0-9]/}.result
-	diff out/output${i//[^0-9]/}.out realOut${i//[^0-9]/}.result
+	$EXECUTABLE < $i > realOut/realOut${i//[^0-9]/}.result
+	diff out/output${i//[^0-9]/}.out realOut/realOut${i//[^0-9]/}.result
 
 	if [ $? -eq 0 ]
 	then

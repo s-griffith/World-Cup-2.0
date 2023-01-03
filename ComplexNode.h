@@ -44,16 +44,6 @@ public:
     */
     virtual ~ComplexNode() = default;
 
-    /*
-    * Helper function for unite_teams in world_cup:
-    * Inserts players into a given array, node by node
-    * @param - an array, current index
-    * @return - current index
-    */
-    int unite_insert(Player** players, int index);
-
-    int getID() const;
-
     T get_data() const;
 
 private:
@@ -101,14 +91,6 @@ private:
     void update_height();
 
     void update_children();
-
-    /*
-     * Helper function for get_all_players in world_cup:
-     * Recursively inserts the player ID's of the data of the tree into a given array
-     * @param - an array, current index
-     * @return - void
-     */
-    int get_data_inorder(int* const array, int index) const;
 
     /*
      * The internal fields of ComplexNode:
@@ -172,21 +154,6 @@ ComplexNode<T>::ComplexNode(T data) :
         m_numChildren(0)
 {}
 
-
-template<class T>
-int ComplexNode<T>::unite_insert(Player** players, int index) {
-    if (this != nullptr && this->m_data != nullptr) {
-        index = m_left->unite_insert(players, index);
-        *(players+(index++)) = this->m_data;
-        index = m_right->unite_insert(players, index);
-    }
-    return index;
-}
-
-template<class T>
-int ComplexNode<T>::getID() const {
-    return this->m_id;
-}
 
 template<class T>
 T ComplexNode<T>::get_data() const {
@@ -330,17 +297,6 @@ void ComplexNode<T>::update_children()
 }
 
 //--------------------------------------Private Helper Function for world_cup---------------------------------------
-
-template <class T>
-int ComplexNode<T>::get_data_inorder(int* const array, int index) const
-{
-    if (this != nullptr) {
-        index = m_left->get_data_inorder(array, index);
-        array[index++] = this->m_id;
-        index = m_right->get_data_inorder(array, index);
-    }
-    return index;
-}
 
 template <class T>
 void ComplexNode<T>::printNode() {
