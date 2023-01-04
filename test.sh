@@ -11,6 +11,7 @@ shopt -s nullglob
 declare -i FAILED_TESTS=0
 declare -i VALGRIND_FAILED=0
 declare -i DIFF_FAILED=0
+VALGRINED_FAILED_NUMS=""
 
 for i in inFiles/test*.in
 do
@@ -42,6 +43,8 @@ do
 			cat $i.valgrind_log
 			FAILED_TESTS+=1
             VALGRIND_FAILED+=1
+			VALGRINED_FAILED_NUMS+="/"
+			VALGRINED_FAILED_NUMS+=$i
 		fi
 	else
 		printf "Leak: ${RED}couldnt get valgrind file${NC}\n"
@@ -50,10 +53,11 @@ do
 	rm $i.valgrind_log
 done
 
-if [ -z ${FAILED_TESTS} ]; then
+if [ ${FAILED_TESTS} -eq 0 ]; then
 	printf "\n${GREEN} All tests passed :)${NC}\n\n"
 else
 	printf "\n${RED} Failed ${FAILED_TESTS}${NC} tests.\n\n"
 	printf "\n${RED} Valgrind Failed ${VALGRIND_FAILED}${NC} tests.\n\n"
+	printf "\n${RED} Valgrind Failed on: ${VALGRIND_FAILED_NUMS}${NC} tests.\n\n"
 	printf "\n${RED} Diff Failed ${DIFF_FAILED}${NC} tests.\n\n"
 fi
