@@ -94,7 +94,8 @@ private:
     void update_height();
 
     /*
-    * Get all players in tree - recursive function
+    * Helper function for enlarge_hash_table in world_cup:
+    * Recursively insert all the players in tree into the given array
     * @param - array of Players, integer of the current index in the array
     * @return - current index in the array.
     */
@@ -134,7 +135,7 @@ GenericNode<T>::GenericNode(T data) :
         m_right(nullptr)
 {}
 
-
+//-------------------------------------------------------------------------------------MOVE------------------------------
 template<class T>
 int GenericNode<T>::get_height() const {
     return this->m_height;
@@ -259,6 +260,8 @@ void GenericNode<T>::update_height()
     }
 }
 
+
+//---------------------------------------Helper Function for world_cup------------------------------------------------
 
 template <class T>
 int GenericNode<T>::get_data_inorder(T* array, int index) const

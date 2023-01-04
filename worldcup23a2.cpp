@@ -46,6 +46,7 @@ StatusType world_cup_t::add_team(int teamId)
         delete newTeam;
         return StatusType::FAILURE;
     }
+    //Insert the team into the rank tree:
     try {
         m_teamsByAbility.insert(newTeam, teamId, 0);
     }
@@ -110,7 +111,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     if (playerRoot != nullptr) {
         playerNumGames -= playerRoot->get_gamesPlayed();
     }
-    //Add the player's partial spirit (it's team's spirit only including the players that joined before the current player)
+    //Add the player's partial spirit-its team's spirit only including the players that joined before the current player
     permutation_t partialSpirit = tmpTeam->get_teamSpirit();
     //If this player isn't the first player on the team
     if (playerRoot != nullptr) {
@@ -129,6 +130,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     catch (const std::bad_alloc& e) {
         return StatusType::ALLOCATION_ERROR;
     }
+    //Update the hash table if needed:
     if (m_numTotalPlayers + 1 == m_currentHashSize) {
         try {
             enlarge_hash_table();
@@ -152,7 +154,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId,
     //If this is the first player in the team, update team pointer to it's players
     if (playerRoot == nullptr) {
         tmpPlayer->update_team(tmpTeam);
-        tmpTeam->set_teamPlayers(tmpPlayer);
+        tmpTeam->update_players(tmpPlayer);
     }
     //Remove the team from the tree sorted by player ability, and update the team's stats
     m_teamsByAbility.remove(tmpTeam->get_teamID(), tmpTeam->get_ability());
@@ -192,6 +194,7 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
     if (!team1->is_valid() || !team2->is_valid()) {
         return output_t<int>(StatusType::FAILURE);
     }
+    //Find the score for each team, and check for a winner:
     int score1 = team1->get_score();
     int score2 = team2->get_score();
     if (score1 > score2) {
@@ -203,7 +206,8 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
         result = 3;
     }
     else {
-        int spirit1 = team1->get_spirit_strength(); //This doesn't need to be a function anymore
+        //The teams were tied, so break the tie according to their spirit strength:
+        int spirit1 = team1->get_spirit_strength();
         int spirit2 = team2->get_spirit_strength();
         if (spirit1 > spirit2) {
             team1->update_points_won();
@@ -214,11 +218,13 @@ output_t<int> world_cup_t::play_match(int teamId1, int teamId2)
             result = 4;
         }
         else {
+            //The teams were still tied:
             team1->update_points_tie();
             team2->update_points_tie();
             result = 0;
         }
     }
+    //Add a game to each of the teams that played:
     team1->add_game();
     team2->add_game();
 	return output_t<int>(result);
@@ -358,19 +364,23 @@ StatusType world_cup_t::buy_team(int teamId1, int teamId2)
         return StatusType::FAILURE;
     }
     int prevAbility = buyer->get_ability();
+    //If both teams contain players, send to a helper function inside Player class:
     if (buyer->get_allPlayers() != nullptr && bought->get_allPlayers() != nullptr) {
         buyer->get_allPlayers()->update_gamesPlayed(buyer->get_games());
         bought->get_allPlayers()->update_gamesPlayed(bought->get_games());
         Player* root = buyer->get_allPlayers()->players_union(bought->get_allPlayers(), buyer->get_num_players(), 
                                         bought->get_num_players(), buyer->get_teamSpirit(), bought->get_teamSpirit());
+        //Update the pointers to the team and players according to the output of the helper function above:
         root->update_team(buyer);
         buyer->update_players(root);
     }
+    //If only the bought team contains players, update the pointers so that they belong to the buying team:
     else if (buyer->get_allPlayers() == nullptr && bought->get_allPlayers() != nullptr) {
         bought->get_allPlayers()->update_gamesPlayed(bought->get_games());
         buyer->update_players(bought->get_allPlayers());
         bought->get_allPlayers()->update_team(buyer);
     }
+    //If only the buying team has players, update the number of games the players played. No need to change pointers.
     else if (buyer->get_allPlayers() != nullptr && bought->get_allPlayers() == nullptr) {
         buyer->get_allPlayers()->update_gamesPlayed(buyer->get_games());
     }

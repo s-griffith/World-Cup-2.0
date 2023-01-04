@@ -32,18 +32,12 @@ public:
     Team();
 
     /*
-    * Copy Constructor of Team class
+    * Copy Constructor and Assignment Operator of Team class
     * world_cup does not allow two of the same player or team (repeating ID's).
     * Therefore the system does not allow a copy constructor.
     */
     Team(const Team& other) = delete;
-
-    /*
-    * Assignment Operator of Team class
-    * Used in the knockout_winner function in world_cup
-    * Copies the numerical fields of Team without copying the trees Team contains
-    */
-    //Team& operator=(const Team& other);
+    Team& operator=(const Team& other) = delete;
 
     /*
     * Destructor of Team class
@@ -94,20 +88,26 @@ public:
     */
     permutation_t get_teamSpirit() const;
 
+    /*
+    * Return the team's ability
+    * @param - none
+    * @return - the team's ability
+    */
     int get_ability() const;
 
+    /*
+    * Return the team's score, calculated according to its points and ability
+    * @param - none
+    * @return - the team's score
+    */
     int get_score() const;
 
-    int get_spirit_strength() const;
-
-    void set_teamPlayers(Player* players);
-
     /*
-    * Checks whether or not a team has enough goalkeepers to be considered valid
+    * Return the team's spirit strength
     * @param - none
-    * @return - bool, whether or not the team is valid
+    * @return - the team's spirit strength
     */
-    bool is_valid() const;
+    int get_spirit_strength() const;
 
     /*
     * Increase the number of games a team has played by 1 (used for play_match in world_cup)
@@ -138,20 +138,19 @@ public:
     void update_players(Player* player);
 
     /*
+    * Checks whether or not a team has enough goalkeepers to be considered valid
+    * @param - none
+    * @return - bool, whether or not the team is valid
+    */
+    bool is_valid() const;
+
+    /*
     * Helper function for add_player in world_cup:
     * Adds the player to the team and updates the team's stats accordingly
     * @param - a pointer to the player to be added, its ID, goals, cards, and whether it is a goalkeeper
     * @return - void
     */
     void add_player(Player* player, const int id, const permutation_t& spirit, const int ability, const int cards, const bool goalkeeper);
-
-    /*
-    * Helper function for remove_player in world_cup:
-    * Removes the player from the team and updates the team's stats accordingly
-    * @param - the player's ID, goals, cards, and whether it is a goalkeeper
-    * @return - void
-    */
-    void remove_player(const int playerID, const int goals, const int cards, const bool goalKeeper);
 
     /*
     * Helper function for knockout in world_cup:
@@ -172,6 +171,8 @@ private:
      *   The number of goalkeepers the team has
      *   The number of games the team has played
      *   The total player ability of the players in the team
+     *   The team's spirit
+     *   A pointer to the root of the upside-down tree that contains the team's players
      */
     int m_id;
     int m_points;

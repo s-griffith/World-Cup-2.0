@@ -96,13 +96,14 @@ public:
     virtual T& search_and_return_data(const int id) const;
 
     /*
-    * Get all players in tree - recursive function
+    * Helper function for enlarge_hash_table in world_cup:
+    * Recursively insert all the players in tree into the given array
     * @param - array of Players
-    * @return - none.
+    * @return - none
     */
     void get_all_data(T* const array) const;
 
-protected:
+private:
 
     /*
     * Make the node a leaf without breaking the sorted tree
@@ -328,7 +329,16 @@ T& Tree<N, T>::search_and_return_data(const int id) const
 }
 
 
-//-----------------------------------------Internal Helper Functions-----------------------------------------
+//-----------------------------------------Helper Functions-----------------------------------------
+
+template <class N, class T>
+void Tree<N, T>::get_all_data(T* const array) const
+{
+    if (this != nullptr) {
+        this->m_node->get_data_inorder(array, 0);
+    }
+}
+
 
 template <class N, class T>
 N* Tree<N, T>::make_node_leaf(N* node)
@@ -423,14 +433,6 @@ N* Tree<N, T>::make_node_leaf(N* node)
         }
     }
     return parentToReturn;
-}
-
-template <class N, class T>
-void Tree<N, T>::get_all_data(T* const array) const
-{
-    if (this != nullptr) {
-        this->m_node->get_data_inorder(array, 0);
-    }
 }
 
 

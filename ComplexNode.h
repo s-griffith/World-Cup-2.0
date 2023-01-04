@@ -22,14 +22,6 @@ public:
     ComplexNode();
 
     /*
-    * Constructor of ComplexNode class
-    * Used in unite_teams to make a new node containing the desired player
-    * @param - data the node holds
-    * @return - A new instance of ComplexNode
-    */     
-    ComplexNode(T data);
-
-    /*
     * Copy Constructor and Assignment Operator of ComplexNode class
     * world_cup does not allow two of the same player or team (repeating ID's).
     * Therefore the system does not allow a copy constructor or assignment operator.
@@ -44,6 +36,11 @@ public:
     */
     virtual ~ComplexNode() = default;
 
+    /*
+    * Returns the data held by the node
+    * @param - none
+    * @return - T, the data held by the node
+    */
     T get_data() const;
 
 private:
@@ -90,13 +87,18 @@ private:
     */
     void update_height();
 
+    /*
+     * Update the number of children of the current node
+     * @param - none
+     * @return - void
+    */
     void update_children();
 
     /*
      * The internal fields of ComplexNode:
      *   Pointers to the parent node and two child nodes
-     *   The goals the player represented by ComplexNode scored
-     *   The cards the player represented by ComplexNode received
+     *   The ability of the team represented by ComplexNode
+     *   The number of children the node has in its subtree
      */
     ComplexNode<T>* m_parent;
     ComplexNode<T>* m_left;
@@ -131,7 +133,7 @@ private:
 };
 
 
-//---------------------------------------Constructor and Public Helper Function--------------------------
+//---------------------------------------Constructor and Getter--------------------------
 
 template <class T>
 ComplexNode<T>::ComplexNode() :
@@ -144,21 +146,11 @@ ComplexNode<T>::ComplexNode() :
 {}
 
 
-template <class T>
-ComplexNode<T>::ComplexNode(T data) :
-        Node<T>(data),
-        m_parent(nullptr),
-        m_left(nullptr),
-        m_right(nullptr),
-        m_ability(data->get_ability()),
-        m_numChildren(0)
-{}
-
-
 template<class T>
 T ComplexNode<T>::get_data() const {
     return this->m_data;
 }
+
 
 //-----------------------------------------Rotations--------------------------------------------
 
@@ -296,7 +288,7 @@ void ComplexNode<T>::update_children()
     m_numChildren = left + right + 1;
 }
 
-//--------------------------------------Private Helper Function for world_cup---------------------------------------
+//--------------------------------------TO REMOVE:---------------------------------------
 
 template <class T>
 void ComplexNode<T>::printNode() {

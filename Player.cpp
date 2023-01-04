@@ -78,12 +78,13 @@ Player* Player::get_parent()
 }
 
 
+//---------------------------------------Setters---------------------------------------------
+
 void Player::detach() 
 {
 	m_team = nullptr;
 }
 
-//---------------------------------------Setters---------------------------------------------
 
 void Player::update_gamesPlayed(const int gamesPlayed)
 {
@@ -114,6 +115,7 @@ void Player::find()
     find_update_parents(this);
 }
 
+
 int Player::find_update_games(Player* tmpPlayer)
 {
     if (tmpPlayer->m_parent == nullptr) {
@@ -122,6 +124,7 @@ int Player::find_update_games(Player* tmpPlayer)
     tmpPlayer->m_gamesPlayed += find_update_games(tmpPlayer->m_parent);
     return tmpPlayer->m_gamesPlayed;
 }
+
 
 permutation_t Player::find_update_partial_spirit(Player* tmpPlayer)
 {
@@ -132,6 +135,7 @@ permutation_t Player::find_update_partial_spirit(Player* tmpPlayer)
     return tmpPlayer->m_partialSpirit;
 }
 
+
 Player* Player::find_update_parents(Player* tmpPlayer)
 {
     if (tmpPlayer->m_parent == nullptr) {
@@ -140,6 +144,8 @@ Player* Player::find_update_parents(Player* tmpPlayer)
     tmpPlayer->m_parent = find_update_parents(tmpPlayer->m_parent);
     return tmpPlayer->m_parent;
 }
+
+//---------------------------------------Helper Function for world_cup---------------------------------------------
 
 Player* Player::players_union(Player* otherTeam, int currentNumPlayers, int otherNumPlayers, \
             permutation_t currentTeamSpirit, permutation_t otherTeamSpirit)

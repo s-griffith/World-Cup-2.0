@@ -92,6 +92,10 @@ public:
     */
     Player* get_parent();
 
+    /*
+    * Detach the team from the player
+    * @return - void
+    */
     void detach();
 
     /*
@@ -142,6 +146,7 @@ public:
     Player* find_update_parents(Player* tmpPlayer);
 
     /*
+    * Helper function for buy_team in world_cup:
     * Unite between the two team players.
     * @return - root of new player upside down tree.
     */

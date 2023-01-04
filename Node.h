@@ -76,6 +76,8 @@ protected:
 };
 
 
+//-------------------------------------Constructors----------------------------
+
 template <class T>
 Node<T>::Node() :
     m_data(nullptr),
@@ -97,6 +99,8 @@ Node<T>::~Node()
 {
     m_data = nullptr;
 }
+
+//-------------------------------------Getter----------------------------
 
 template <class T>
 int Node<T>::getID() const {
