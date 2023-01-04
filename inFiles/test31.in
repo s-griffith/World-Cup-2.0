@@ -1,0 +1,300 @@
+add_team 1
+add_team 2
+add_team 3
+add_team 4
+add_team 5
+add_team 6
+add_team 7
+add_team 8
+add_team 9
+add_team 10
+add_team 11
+add_team 12
+add_team 13
+add_team 14
+add_team 15
+add_team 16
+add_team 17
+add_team 18
+add_team 19
+add_team 20
+add_team 21
+add_team 22
+add_team 23
+add_team 24
+add_team 25
+add_team 26
+add_team 27
+add_team 28
+add_team 29
+add_team 30
+add_team 31
+add_team 32
+add_team 33
+add_team 34
+add_team 35
+add_team 36
+add_team 37
+add_team 38
+add_team 39
+add_team 40
+add_team 41
+add_team 42
+add_team 43
+add_team 44
+add_team 45
+add_team 46
+add_team 47
+add_team 48
+add_team 49
+add_team 50
+add_team 51
+add_team 52
+add_team 53
+add_team 54
+add_team 55
+add_team 56
+add_team 57
+add_team 58
+add_team 59
+add_team 60
+add_team 61
+add_team 62
+add_team 63
+add_team 64
+add_team 65
+add_team 66
+add_team 67
+add_team 68
+add_team 69
+add_team 70
+add_team 71
+add_team 72
+add_team 73
+add_team 74
+add_team 75
+add_team 76
+add_team 77
+add_team 78
+add_team 79
+add_team 80
+add_team 81
+add_team 82
+add_team 83
+add_team 84
+add_team 85
+add_team 86
+add_team 87
+add_team 88
+add_team 89
+add_team 90
+add_team 91
+add_team 92
+add_team 93
+add_team 94
+add_team 95
+add_team 96
+add_team 97
+add_team 98
+add_team 99
+add_team 100
+add_player 1 100 3,5,2,1,4 1136280075 1006637833 463055430 true
+add_player 2 100 5,4,3,1,2 987568039 248735944 85210793 false
+add_player 3 100 1,4,5,2,3 293117403 627531561 546190599 true
+add_player 4 100 4,1,2,3,5 1900964960 319396261 1313488871 true
+add_player 5 100 1,3,2,4,5 508054892 315429079 996731295 false
+add_player 6 100 5,3,2,1,4 1946919526 1600387880 865467697 true
+add_player 7 100 2,1,4,5,3 442690166 973684390 1160562515 true
+add_player 8 100 1,5,3,2,4 110433870 1280794085 2004157685 false
+add_player 9 100 4,3,5,2,1 349412495 912773472 1378682327 true
+add_player 10 100 3,5,1,4,2 868311086 1254433962 1494460868 true
+add_player 11 100 5,1,4,2,3 436776310 464427595 2075027508 false
+add_player 12 100 1,2,5,3,4 431506626 1912105166 1159733039 true
+add_player 13 100 4,1,2,5,3 1988937128 525206711 932339273 false
+add_player 14 100 1,3,5,4,2 1491635067 1894652719 1299606918 false
+add_player 15 100 3,2,4,5,1 1879983975 966234743 305604092 false
+add_player 16 100 1,2,3,4,5 595569781 184054213 1244269182 true
+add_player 17 100 1,4,2,5,3 1902989739 765792735 1484826726 false
+add_player 18 100 3,2,4,5,1 2051135858 31526087 1653175313 true
+add_player 19 100 1,2,5,3,4 1162727797 1815176520 394379185 false
+add_player 20 100 4,3,5,2,1 694031534 549908323 131297286 false
+add_player 21 100 5,3,2,1,4 1666708614 578265683 2051229254 false
+add_player 22 100 5,3,2,1,4 114280009 1121391508 1567058692 true
+add_player 23 100 3,2,4,1,5 1538949996 1327726863 745852021 true
+add_player 24 100 2,3,5,4,1 575664878 1637074437 2114866706 true
+add_player 25 100 4,2,3,1,5 1308477526 932544159 309904429 false
+add_player 26 100 3,5,2,1,4 396356200 1003526863 250713475 false
+add_player 27 100 2,1,5,3,4 398017394 514685022 1763302955 true
+add_player 28 100 1,2,3,5,4 1346036408 1442149980 642675619 true
+add_player 29 100 3,2,1,4,5 32174891 1236296506 2089464229 false
+add_player 30 100 2,3,4,1,5 1786059216 547005115 1775674665 true
+add_player 31 100 4,2,1,3,5 96190678 2065693065 257055461 true
+add_player 32 100 2,4,1,5,3 1376860296 2106803349 1212323347 false
+add_player 33 100 5,1,4,2,3 763213386 1659680118 2066641686 false
+add_player 34 100 1,3,2,4,5 1907869131 593943286 1709980650 true
+add_player 35 100 2,1,4,3,5 575285884 2108413990 318615182 true
+add_player 36 100 2,4,1,5,3 1840745296 1293924270 897879395 true
+add_player 37 100 4,5,3,1,2 645138923 1167769363 1024216497 true
+add_player 38 100 4,1,2,3,5 1335560077 905585879 1386661295 true
+add_player 39 100 4,2,5,1,3 1734424340 2086917238 852782507 false
+add_player 40 100 1,2,5,4,3 1595591782 216072859 2015242768 true
+add_player 41 100 5,3,4,1,2 932547240 753044496 1058554056 true
+add_player 42 100 1,5,3,4,2 1160362307 1621815498 615937224 false
+add_player 43 100 4,5,2,1,3 2055410404 2055346634 736706430 false
+add_player 44 100 5,4,3,1,2 1654495319 219704609 503524504 true
+add_player 45 100 3,5,2,1,4 130576727 1835870584 937942359 true
+add_player 46 100 5,3,2,1,4 1482559734 51840186 1397533598 true
+add_player 47 100 1,4,2,5,3 932422264 1867677043 293498507 true
+add_player 48 100 2,1,5,3,4 924925942 484152329 1253595370 false
+add_player 49 100 1,2,5,4,3 1904716753 1237845077 2062491750 false
+add_player 50 100 1,3,2,5,4 1046365046 1427980358 828254655 false
+add_player 51 100 1,5,2,4,3 1567461898 2084491686 1915402699 true
+add_player 52 100 1,4,3,5,2 1357508310 1432445194 596028352 true
+add_player 53 100 4,3,2,1,5 919005918 1822544941 664052311 false
+add_player 54 100 3,2,4,5,1 646764748 142858968 291890048 true
+add_player 55 100 3,2,1,4,5 43937488 284329615 1094865001 false
+add_player 56 100 2,1,4,5,3 1945038942 33706761 777088590 false
+add_player 57 100 4,2,1,3,5 816923916 1125467993 1804482201 true
+add_player 58 100 4,5,3,2,1 1416217098 985273854 1094389206 true
+add_player 59 100 5,2,3,1,4 895999902 222495221 177782347 true
+add_player 60 100 3,2,4,1,5 1171736018 1442138756 1855982877 false
+add_player 61 100 3,4,1,5,2 761842227 1393128848 1220952177 true
+add_player 62 100 1,5,4,2,3 786273946 1001986200 1614848587 true
+add_player 63 100 5,1,3,2,4 1677053744 2051778399 177317675 true
+add_player 64 100 1,4,2,5,3 398644413 996616483 1626962790 true
+add_player 65 100 1,4,2,5,3 1419556918 1429339390 1703237121 true
+add_player 66 100 2,3,4,5,1 170403509 1687348734 1129109472 true
+add_player 67 100 2,4,5,3,1 1711656339 1268598932 1797664057 false
+add_player 68 100 5,3,4,2,1 1907679629 886761903 407297010 false
+add_player 69 100 4,2,3,1,5 281872653 1826482688 51291467 true
+add_player 70 100 3,5,1,4,2 124287562 337743892 255021272 true
+add_player 71 100 4,3,2,1,5 1755666197 1057189881 762899793 true
+add_player 72 100 2,3,5,4,1 90681396 768362674 821220799 false
+add_player 73 100 1,5,4,2,3 310918428 1358128219 1830599211 true
+add_player 74 100 3,5,2,4,1 1540126166 546540686 2087612126 true
+add_player 75 100 4,5,3,2,1 285018830 371678175 89138086 false
+add_player 76 100 5,2,1,4,3 68373790 2130318443 281070591 false
+add_player 77 100 1,4,3,2,5 1508480461 194076352 393991235 false
+add_player 78 100 5,2,3,4,1 2014182228 2135456962 354797424 true
+add_player 79 100 2,1,5,4,3 650559900 752952311 37555657 false
+add_player 80 100 5,4,2,3,1 471862627 557693895 1265079702 true
+add_player 81 100 2,4,3,5,1 660024490 91261134 237726234 true
+add_player 82 100 4,2,1,5,3 862041912 181535852 621014013 false
+add_player 83 100 3,4,1,2,5 1168629222 57664667 1746425004 false
+add_player 84 100 3,4,1,5,2 292546805 1824295583 706635661 false
+add_player 85 100 5,3,4,1,2 781955402 4784533 1999291287 true
+add_player 86 100 2,5,1,3,4 2065317359 463790001 1511271574 true
+add_player 87 100 2,4,3,5,1 1922768515 1472089072 499790427 false
+add_player 88 100 4,2,1,3,5 197741612 1169695395 437444404 true
+add_player 89 100 2,3,5,4,1 1362063296 547461254 380979066 true
+add_player 90 100 2,3,5,1,4 1018499311 1741765509 389963383 true
+add_player 91 100 5,2,3,1,4 81802887 1378283073 2061855026 false
+add_player 92 100 4,1,5,3,2 691372699 116612862 1418530955 true
+add_player 93 100 4,3,1,2,5 1097950649 2098533543 74813059 false
+add_player 94 100 4,5,1,2,3 1903594345 900448394 1948521978 true
+add_player 95 100 4,2,3,5,1 307559984 1985589124 743986730 true
+add_player 96 100 1,2,3,4,5 1676610081 1516788176 769607489 true
+add_player 97 100 1,5,2,3,4 1392645179 6934188 2125393771 true
+add_player 98 100 5,1,4,2,3 1034890415 1658660485 1686441081 false
+add_player 99 100 5,3,2,1,4 1961693644 1321683642 2039374428 true
+add_player 100 100 5,1,3,4,2 307051550 1663040986 214672195 false
+num_played_games_for_player 1
+num_played_games_for_player 2
+num_played_games_for_player 3
+num_played_games_for_player 4
+num_played_games_for_player 5
+num_played_games_for_player 6
+num_played_games_for_player 7
+num_played_games_for_player 8
+num_played_games_for_player 9
+num_played_games_for_player 10
+num_played_games_for_player 11
+num_played_games_for_player 12
+num_played_games_for_player 13
+num_played_games_for_player 14
+num_played_games_for_player 15
+num_played_games_for_player 16
+num_played_games_for_player 17
+num_played_games_for_player 18
+num_played_games_for_player 19
+num_played_games_for_player 20
+num_played_games_for_player 21
+num_played_games_for_player 22
+num_played_games_for_player 23
+num_played_games_for_player 24
+num_played_games_for_player 25
+num_played_games_for_player 26
+num_played_games_for_player 27
+num_played_games_for_player 28
+num_played_games_for_player 29
+num_played_games_for_player 30
+num_played_games_for_player 31
+num_played_games_for_player 32
+num_played_games_for_player 33
+num_played_games_for_player 34
+num_played_games_for_player 35
+num_played_games_for_player 36
+num_played_games_for_player 37
+num_played_games_for_player 38
+num_played_games_for_player 39
+num_played_games_for_player 40
+num_played_games_for_player 41
+num_played_games_for_player 42
+num_played_games_for_player 43
+num_played_games_for_player 44
+num_played_games_for_player 45
+num_played_games_for_player 46
+num_played_games_for_player 47
+num_played_games_for_player 48
+num_played_games_for_player 49
+num_played_games_for_player 50
+num_played_games_for_player 51
+num_played_games_for_player 52
+num_played_games_for_player 53
+num_played_games_for_player 54
+num_played_games_for_player 55
+num_played_games_for_player 56
+num_played_games_for_player 57
+num_played_games_for_player 58
+num_played_games_for_player 59
+num_played_games_for_player 60
+num_played_games_for_player 61
+num_played_games_for_player 62
+num_played_games_for_player 63
+num_played_games_for_player 64
+num_played_games_for_player 65
+num_played_games_for_player 66
+num_played_games_for_player 67
+num_played_games_for_player 68
+num_played_games_for_player 69
+num_played_games_for_player 70
+num_played_games_for_player 71
+num_played_games_for_player 72
+num_played_games_for_player 73
+num_played_games_for_player 74
+num_played_games_for_player 75
+num_played_games_for_player 76
+num_played_games_for_player 77
+num_played_games_for_player 78
+num_played_games_for_player 79
+num_played_games_for_player 80
+num_played_games_for_player 81
+num_played_games_for_player 82
+num_played_games_for_player 83
+num_played_games_for_player 84
+num_played_games_for_player 85
+num_played_games_for_player 86
+num_played_games_for_player 87
+num_played_games_for_player 88
+num_played_games_for_player 89
+num_played_games_for_player 90
+num_played_games_for_player 91
+num_played_games_for_player 92
+num_played_games_for_player 93
+num_played_games_for_player 94
+num_played_games_for_player 95
+num_played_games_for_player 96
+num_played_games_for_player 97
+num_played_games_for_player 98
+num_played_games_for_player 99
+num_played_games_for_player 100
