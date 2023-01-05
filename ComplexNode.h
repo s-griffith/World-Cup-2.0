@@ -3,7 +3,6 @@
 
 #include "Node.h"
 #include "Player.h"
-#include <iostream>
 
 /*
 * Class Complex Node : Node
@@ -114,21 +113,8 @@ private:
     template <class M>
     friend class MultiTree;
 
-    template <class K>
-    friend class TreeExtraPointer;
-
     template <class ComplexNode, class N>
     friend class Tree;
-
-    /*
-     * Helper functions for testing:
-     * Prints a tree, node by node
-     * @param - none
-     * @return - void
-     */
-    void inorderWalkNode(bool flag);
-    void printNode();
-    void printData();
     
 };
 
@@ -288,53 +274,6 @@ void ComplexNode<T>::update_children()
     m_numChildren = left + right + 1;
 }
 
-//--------------------------------------TO REMOVE:---------------------------------------
-
-template <class T>
-void ComplexNode<T>::printNode() {
-    int parent, left, right;
-    if (m_parent == nullptr) {
-        parent = -1;
-    }
-    else {
-        parent = m_parent->m_id;
-    }
-    if (m_left == nullptr) {
-        left = -1;
-    }
-    else {
-        left = m_left->m_id;
-    }
-    if (m_right == nullptr) {
-        right = -1;
-    }
-    else {
-        right = m_right->m_id;
-    }
-    std::cout << "ID = " << this->m_id << ", Ability = " << this->m_ability << ", NumChildren = " << this->m_numChildren << ", Parent = " << parent << ", Left = " 
-            << left << ", Right = " << right << std::endl;
-}
-
-
-template <class T>
-void ComplexNode<T>::printData() {
-    std::cout << "ID = " << Node<T>::m_id << std::endl;
-}
-
-
-template <class T>
-void ComplexNode<T>::inorderWalkNode(bool flag) {
-    if (this != nullptr) {
-        m_left->inorderWalkNode(flag);
-        if (flag) {
-            this->printNode();
-        }
-        else {
-            this->printData();
-        }
-        m_right->inorderWalkNode(flag);
-    }
-}
 
 //-----------------------------------------------------------------------------------------------------------
 
