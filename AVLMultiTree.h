@@ -5,7 +5,6 @@
 #include "Node.h"
 #include "ComplexNode.h"
 #include "Exception.h"
-#include <iostream>
 
 /*
 * Class MultiTree : Tree
@@ -80,14 +79,6 @@ public:
      * @return - the requested node
      */
     ComplexNode<T>* find_index(ComplexNode<T>* node, const int index);
-
-    /*
-     * Helper function for testing:
-     * Prints the tree, node by node
-     * @param - none
-     * @return - void
-     */
-    void print_tree();
 
 private:
 
@@ -383,11 +374,6 @@ void MultiTree<T>::upwardUpdate(ComplexNode<T>* starting) {
         starting->update_children();
         starting = starting->m_parent;
     }
-}
-
-template<class T>
-void MultiTree<T>::print_tree() {
-    this->m_node->inorderWalkNode(1);
 }
 
 //----------------------------------------------------------------------------------------------
