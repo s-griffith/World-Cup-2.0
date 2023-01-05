@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TESTS_TO_RUN=1000
+TESTS_TO_RUN=10001
 EXECUTABLE=./FileTester
 
 RED='\033[0;31m'
