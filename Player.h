@@ -3,7 +3,6 @@
 
 class Team;
 
-//#include "Teams.h"
 #include "wet2util.h"
 #include "Teams.h"
 #include <memory>
