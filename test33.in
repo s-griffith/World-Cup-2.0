@@ -1,0 +1,5 @@
+add_team 1
+add_player 1 1 3,2,1,4,5 107 46 10 true
+remove_team 1
+add_team 1
+add_player_cards 1 500
