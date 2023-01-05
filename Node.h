@@ -65,8 +65,6 @@ protected:
      * Node.
      * This allows Node to be a mostly protected class, while allowing the system to run smoothly.
     */    
-    template <class K>
-    friend class TreeExtraPointer;
 
     template <class S>
     friend class MultiTree;
