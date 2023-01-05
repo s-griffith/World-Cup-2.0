@@ -440,7 +440,7 @@ bool world_cup_t::check_player_kicked_out(int playerId)
 void world_cup_t::enlarge_hash_table()
 {
     int newSize = ((m_currentHashSize + 1 ) * 2 ) - 1;
-    Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[newSize];
+    Tree<GenericNode<Player*>, Player*>** newTable = new Tree<GenericNode<Player*>, Player*>*[m_currentHashSize];
     for (int i = 0; i < newSize; i++) {
         try {
             newTable[i] = new Tree<GenericNode<Player*>, Player*>();
